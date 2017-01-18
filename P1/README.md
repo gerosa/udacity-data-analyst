@@ -34,30 +34,28 @@ A one-sample t-test will be performed because we don't know the population param
 
 | Condition        | Sample Mean  | Sample Standard Deviation    |
 | ---------------- | ------------ | -----------------------------|
-| congruent        | 14051.13     | 3559.36                      |
-| incongruent      | 22015.92     | 4797.06                      |
-| difference       | 7964.79      | 4864.83                      |
+| congruent        | 14.05        | 3.56                         |
+| incongruent      | 22.02        | 4.80                         |
+| difference       | 7.96         | 4.86                         |
 
 ### 4. Provide one or two visualizations that show the distribution of the sample data. Write one or two sentences noting what you observe about the plot or plots.
 
 #### Congruent Distribution
-The congruent histogram (bin size equals 3000) follows a normal distribution
+The congruent histogram (bin size equals 3) follows a normal distribution
 
-![Congruent Distribution](https://github.com/gerosa/udacity-data-analyst/blob/master/P1/congruent_distribution.png)
-
-
+![Congruent Distribution](https://raw.githubusercontent.com/gerosa/udacity-data-analyst/master/P1/congruent_distribution.png)
 
 #### Incongruent Distribution
-The incongruent histogram (bin size equals 2500) follows a normal distribution with few outliners at the positive side.
+The incongruent histogram (bin size equals 2.5) follows a normal distribution with few outliners at the positive side.
 
-![Incongruent Distribution](https://github.com/gerosa/udacity-data-analyst/blob/master/P1/incongruent_distribution.png)
+![Incongruent Distribution](https://raw.githubusercontent.com/gerosa/udacity-data-analyst/master/P1/incongruent_distribution.png)
 
 ### 5. Now, perform the statistical test and report your results. What is your confidence level and your critical statistic value? Do you reject the null hypothesis or fail to reject it? Come to a conclusion in terms of the experiment task. Did the results match up with your expectations?
 ```
 alpha = 0.01
 t-critical = 2.5
 t(23) = 8.02, p < 0.01, One-tailed positive direction
-99% CI = (5177.36, 10752.22)
+99% CI = (5.18, 10.75)
 ```
 Based on the above results we reject the null and we can say that there is a statiscally significant effect in the positve direction, i.e, the incongruent task takes more time than the congruent task.
 
