@@ -30,8 +30,8 @@ The alternative hypothesis is the mean difference is greater than 0.
 
 A t-test will be performed because:
 
-1. We don't know the population standard deviation and 
-2. the sample size is less than 30.  
+1. We don't know the population standard deviation.
+2. the sample size is less than 30.
 
 As the same sample is been tested in two different conditions, a dependent t-test for paired samples is the best choice.
 
