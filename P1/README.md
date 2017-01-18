@@ -14,21 +14,26 @@ The goal of the study is to observe if participants take more time to name the w
 The independent variable is the word condition (congruent or incongruent) and the dependent variable is the time to name the words.
 
 ### 2. What is an appropriate set of hypotheses for this task? What kind of statistical test do you expect to perform? Justify your choices.
-The null hypothesis is there is no difference between the two conditions. To be more precise, the null hypothesis is the mean time to name the words in the incroguent condition is less then or equals to the mean time to name the words in the congruent condition.
+The null hypothesis is there is no significant difference between the mean time to name words in the congruent and incroguent conditions.
 
-![](https://render.githubusercontent.com/render/math?math=H_0%3A%20%20%5Cmu_i%20%20%5Cleq%20%20%5Cmu_c)
+![](https://render.githubusercontent.com/render/math?math=H_0%3A%20%20%5Cmu_i%20%20%3D%20%5Cmu_c)
 
-The null hypothesis can be rephrased as the diference between the incongruent and congruent means is less than or equals to 0.
+The null hypothesis can be rephrased as the diference between the incongruent and congruent condition means is equals to 0.
 
-![](https://render.githubusercontent.com/render/math?math=H_0%3A%20%5Cmu_i%20-%20%5Cmu_c%20%20%5Cleq%200)
+![](https://render.githubusercontent.com/render/math?math=H_0%3A%20%5Cmu_i%20-%20%5Cmu_c%20%3D%200)
 
-![](https://render.githubusercontent.com/render/math?math=H_0%3A%20%20%5Cmu_D%20%20%5Cleq%200)
+![](https://render.githubusercontent.com/render/math?math=H_0%3A%20%20%5Cmu_D%20%3D%200)
 
-The alternative hypothesis is the mean difference are greater than 0.
+The alternative hypothesis is the mean difference is greater than 0.
 
 ![](https://render.githubusercontent.com/render/math?math=H_0%3A%20%20%5Cmu_D%20%3E%200)
 
-A one-sample t-test will be performed because we don't know the population parameters.  
+A t-test will be performed because:
+
+1. We don't know the population standard deviation and 
+2. the sample size is less than 30.  
+
+As the same sample is been tested in two different conditions, a dependent t-test for paired samples is the best choice.
 
 ### 3. Report some descriptive statistics regarding this dataset. Include at least one measure of central tendency and at least one measure of variability.
 
