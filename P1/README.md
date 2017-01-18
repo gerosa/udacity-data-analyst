@@ -26,7 +26,7 @@ The null hypothesis can be rephrased as the diference between the incongruent an
 
 The alternative hypothesis is the mean difference is greater than 0.
 
-![](https://render.githubusercontent.com/render/math?math=H_0%3A%20%20%5Cmu_D%20%3E%200)
+![](https://render.githubusercontent.com/render/math?math=H_a%3A%20%20%5Cmu_D%20%3E%200)
 
 A t-test will be performed because:
 
