@@ -11,7 +11,7 @@ The goal of the study is to observe if participants take more time to name the w
 ## Questions for Investigation
 
 ### 1. What is our independent variable? What is our dependent variable?
-The independent variable is the word condition (congruent or incroguent) and the dependent variable is the time to name the words.
+The independent variable is the word condition (congruent or incongruent) and the dependent variable is the time to name the words.
 
 ### 2. What is an appropriate set of hypotheses for this task? What kind of statistical test do you expect to perform? Justify your choices.
 The null hypothesis is there is no difference between the two conditions. To be more precise, the null hypothesis is the mean time to name the words in the incroguent condition is less then or equals to the mean time to name the words in the congruent condition.
@@ -62,7 +62,7 @@ t(23) = 8.02, p < 0.01, One-tailed positive direction
 Based on the above results we reject the null and we can say that there is a statiscally significant effect in the positve direction, i.e, the incongruent task takes more time than the congruent task.
 
 ### 6. Optional: What do you think is responsible for the effects observed? Can you think of an alternative or similar task that would result in a similar effect? Some research about the problem will be helpful for thinking about these two questions!
-When we learn how to read, we train our brains to reconize the words very fast. On the other hand, we don't need to train our brains to look to a specific color and immediately recognize its name, i.e, we need to think first. So, when there is an incongruence, the word is reconized faster than the color and takes more time to correct the wrong name.
+When we learn how to read, we train our brains to reconize the words very fast. On the other hand, we don't need to train our brains to look at a specific color and immediately recognize its name, i.e, we need to think first. So, when there is an incongruence, the word is reconized faster than the color and takes more time to correct the wrong name.
 
 A similar task could be performed with geometric forms, writting the name of the form in the center and measuring the performance with and without incongruence.
 
