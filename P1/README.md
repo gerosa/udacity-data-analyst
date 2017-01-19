@@ -11,20 +11,20 @@ The goal of the study is to observe if participants take more time to name the w
 ## Questions for Investigation
 
 ### 1. What is our independent variable? What is our dependent variable?
-The independent variable is the word condition (congruent or incongruent) and the dependent variable is the time to name the words.
+The independent variable is whether the words shown are congruent with the ink colors or if they are incongruent with ink colors. The dependent variable is the amount of time it takes to name, out loud, the color of the inks in which the words are displayed.
 
 ### 2. What is an appropriate set of hypotheses for this task? What kind of statistical test do you expect to perform? Justify your choices.
-The null hypothesis is there is no significant difference between the mean time to name words in the congruent and incroguent conditions.
+The null hypothesis is that there is no significant difference between the population mean time to name words in the congruent-condition task (![](https://render.githubusercontent.com/render/math?math=%5Cmu_c%20)) and the population mean time to name words in the incroguent-condition task (![](https://render.githubusercontent.com/render/math?math=%5Cmu_i%20)).
 
 ![](https://render.githubusercontent.com/render/math?math=H_0%3A%20%20%5Cmu_i%20%20%3D%20%5Cmu_c)
 
-The null hypothesis can be rephrased as the diference between the incongruent and congruent condition means is equals to 0.
+The null hypothesis can be rephrased as the diference between the incongruent and congruent condition population means (![](https://render.githubusercontent.com/render/math?math=%5Cmu_D%20)) is equals to 0.
 
 ![](https://render.githubusercontent.com/render/math?math=H_0%3A%20%5Cmu_i%20-%20%5Cmu_c%20%3D%200)
 
 ![](https://render.githubusercontent.com/render/math?math=H_0%3A%20%20%5Cmu_D%20%3D%200)
 
-The alternative hypothesis is the mean difference is greater than 0.
+The alternative hypothesis is the population mean difference is greater than 0.
 
 ![](https://render.githubusercontent.com/render/math?math=H_a%3A%20%20%5Cmu_D%20%3E%200)
 
@@ -62,7 +62,7 @@ t-critical = 2.5
 t(23) = 8.02, p < 0.01, One-tailed positive direction
 99% CI = (5.18, 10.75)
 ```
-Based on the above results we reject the null and we can say that there is a statiscally significant effect in the positve direction, i.e, the incongruent task takes more time than the congruent task.
+Based on the above results we reject the null and we can say that it takes significantly longer to complete the incongruent-condition task than the congruent-condition task.
 
 ### 6. Optional: What do you think is responsible for the effects observed? Can you think of an alternative or similar task that would result in a similar effect? Some research about the problem will be helpful for thinking about these two questions!
 When we learn how to read, we train our brains to reconize the words very fast. On the other hand, we don't need to train our brains to look at a specific color and immediately recognize its name, i.e, we need to think first. So, when there is an incongruence, the word is reconized faster than the color and takes more time to correct the wrong name.
