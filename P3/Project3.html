@@ -11746,6 +11746,48 @@ div#notebook {
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">IPython.core.display</span> <span class="k">as</span> <span class="nn">di</span>
+
+<span class="c1"># This line will hide code by default when the notebook is exported as HTML</span>
+<span class="n">di</span><span class="o">.</span><span class="n">display_html</span><span class="p">(</span><span class="s1">&#39;&lt;script&gt;jQuery(function() {if (jQuery(&quot;body.notebook_app&quot;).length == 0) { jQuery(&quot;.input_area&quot;).toggle(); jQuery(&quot;.prompt&quot;).toggle();}});&lt;/script&gt;&#39;</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># This line will add a button to toggle visibility of code blocks, for use with the HTML export version</span>
+<span class="n">di</span><span class="o">.</span><span class="n">display_html</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;&lt;button onclick=&quot;jQuery(&#39;.input_area&#39;).toggle(); jQuery(&#39;.prompt&#39;).toggle();&quot;&gt;Toggle code&lt;/button&gt;&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+
+<div class="output_html rendered_html output_subarea ">
+<script>jQuery(function() {if (jQuery("body.notebook_app").length == 0) { jQuery(".input_area").toggle(); jQuery(".prompt").toggle();}});</script>
+</div>
+
+</div>
+
+<div class="output_area"><div class="prompt"></div>
+
+<div class="output_html rendered_html output_subarea ">
+<button onclick="jQuery('.input_area').toggle(); jQuery('.prompt').toggle();">Toggle code</button>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -11806,7 +11848,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="1.-Street-Types">1. Street Types<a class="anchor-link" href="#1.-Street-Types">&#182;</a></h3><p>The code below go through the dataset to find over-abbreviated street types, e.g. "Rod." rather than "Rodovia", or typos, e.g. "Praca" rather than "Praça".</p>
+<h3 id="1.-Street-Types">1. Street Types<a class="anchor-link" href="#1.-Street-Types">&#182;</a></h3><p>The first issue found in the dataset was over-abbreviated street types, e.g. "Rod." rather than "Rodovia", or typos, e.g. "Praca" rather than "Praça". The list below shows all occurences of streets that don't start with the expected types.</p>
 
 </div>
 </div>
@@ -11896,7 +11938,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The function <code>update_street_type()</code> fixes street types using a mapping. The function will be called later during the reshaping phase.</p>
+<p>Some street types were fixed using a dict mapping.</p>
 
 </div>
 </div>
@@ -11913,7 +11955,19 @@ div#notebook {
             <span class="s2">&quot;ESTRADA&quot;</span><span class="p">:</span> <span class="s2">&quot;Estrada&quot;</span><span class="p">,</span>
             <span class="s2">&quot;FAZENDA&quot;</span><span class="p">:</span> <span class="s2">&quot;Fazenda&quot;</span><span class="p">}</span>
 
-<span class="k">def</span> <span class="nf">update_street_type</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Mapping:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">update_street_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">mapping</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fixes the street type (i.e the first word) of a street using a dict mapping. </span>
+<span class="sd">    For example, if name == &quot;Rod. BR-101&quot; and mapping == {&quot;Rod&quot; : &quot;Rodovia&quot;}, this function returns &quot;Rodovia BR-101&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        name: the street name.</span>
+<span class="sd">        mapping: the dict mapping used to fix the street types</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        the street name replacing the street type by its corrected version.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">street_type_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
@@ -11921,10 +11975,11 @@ div#notebook {
             <span class="k">return</span> <span class="n">street_type_re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">name</span><span class="p">)</span> 
     <span class="k">return</span> <span class="n">name</span>
 
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Results after fixing the streets:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="c1"># validate if the function is working correctly</span>
 <span class="k">for</span> <span class="n">st_type</span><span class="p">,</span> <span class="n">ways</span> <span class="ow">in</span> <span class="n">st_types</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ways</span><span class="p">:</span>
-        <span class="n">fixed</span> <span class="o">=</span> <span class="n">update_street_type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">fixed</span> <span class="o">=</span> <span class="n">update_street_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">mapping</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="n">fixed</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> =&gt; </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">fixed</span><span class="p">))</span>
 </pre></div>
@@ -11939,11 +11994,23 @@ div#notebook {
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Rod. Es-080 - Governador José Sette =&gt; Rodovia Es-080 - Governador José Sette
-ESTRADA PARA PALMEIRAS =&gt; Estrada PARA PALMEIRAS
+<pre>
+Mapping:
+
+{&#39;ESTRADA&#39;: &#39;Estrada&#39;,
+ &#39;FAZENDA&#39;: &#39;Fazenda&#39;,
+ &#39;Praca&#39;: &#39;Praça&#39;,
+ &#39;RODOVIA&#39;: &#39;Rodovia&#39;,
+ &#39;Rod&#39;: &#39;Rodovia&#39;,
+ &#39;Rod.&#39;: &#39;Rodovia&#39;}
+
+Results after fixing the streets:
+
+Rod. Es-080 - Governador José Sette =&gt; Rodovia Es-080 - Governador José Sette
 ESTRADA 101 APOS POSTO Nossa Senhora do APARECIDA =&gt; Estrada 101 APOS POSTO Nossa Senhora do APARECIDA
-ESTRADA CAMBOAPINA =&gt; Estrada CAMBOAPINA
+ESTRADA PARA PALMEIRAS =&gt; Estrada PARA PALMEIRAS
 ESTRADA PARA O ACQUAMANIA =&gt; Estrada PARA O ACQUAMANIA
+ESTRADA CAMBOAPINA =&gt; Estrada CAMBOAPINA
 RODOVIA BR 262 =&gt; Rodovia BR 262
 FAZENDA SAO DOMINGOS =&gt; Fazenda SAO DOMINGOS
 Praca Henrique Meyerfreund =&gt; Praça Henrique Meyerfreund
@@ -11961,7 +12028,7 @@ Rod BR-101 - Contorno =&gt; Rodovia BR-101 - Contorno
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2.-Zip-Codes">2. Zip Codes<a class="anchor-link" href="#2.-Zip-Codes">&#182;</a></h3><p>Brazilian zip code is called CEP and uses the format 00000-000. Also, acording to <a href="http://www.correios.com.br/">Correios</a> web site, the range of valid zip codes for Vila Velha is between 29100-001 to 29129-999. The code below go through the dataset to find invalid zip codes.</p>
+<h3 id="2.-Zip-Codes">2. Zip Codes<a class="anchor-link" href="#2.-Zip-Codes">&#182;</a></h3><p>Brazilian zip code is called CEP and uses the format 00000-000. Also, acording to <a href="http://www.correios.com.br/">Correios</a> web site, the range of valid zip codes for Vila Velha is between 29100-001 to 29129-999.</p>
 
 </div>
 </div>
@@ -12052,7 +12119,7 @@ Number of zip codes out of range: 258
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The function <code>update_zipcode</code> standardize the zip codes to the CEP format and check if the zip code is within the valid range. This function will be called later during the reshape phase.</p>
+<p>The zip codes were standardized to the CEP format and checked if it's within the valid range. For example:</p>
 
 </div>
 </div>
@@ -12086,18 +12153,18 @@ Number of zip codes out of range: 258
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>29010340 =&gt; None
-29.053-245 =&gt; None
-29050705 =&gt; None
-29041265 =&gt; None
-29047850 =&gt; None
-29102195 =&gt; 29102-195
-29102240 =&gt; 29102-240
-29.100-200 =&gt; None
-29100000 =&gt; None
-29010906 =&gt; None
+<pre>29102195 =&gt; 29102-195
 3149-7327 =&gt; None
+29.053-245 =&gt; None
+29010340 =&gt; None
+29100000 =&gt; None
+29041265 =&gt; None
 29017950 =&gt; None
+29.100-200 =&gt; None
+29050705 =&gt; None
+29047850 =&gt; None
+29102240 =&gt; 29102-240
+29010906 =&gt; None
 </pre>
 </div>
 </div>
@@ -12111,7 +12178,7 @@ Number of zip codes out of range: 258
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Reshape-Data-to-JSON">Reshape Data to JSON<a class="anchor-link" href="#Reshape-Data-to-JSON">&#182;</a></h3><p>To be able to import the data into MongoDB, the data has to be reshaped from XML to JSON format. The following rules were applied:</p>
+<h3 id="Reshape-Data-to-JSON">Reshape Data to JSON<a class="anchor-link" href="#Reshape-Data-to-JSON">&#182;</a></h3><p>To be able to import the data into MongoDB, the data had to be reshaped from XML to JSON format. The following rules were applied:</p>
 <ul>
 <li>process only 2 types of top level tags: "node" and "way"</li>
 <li>all attributes of "node" and "way" should be turned into regular key/value pairs, except:<ul>
@@ -12210,7 +12277,7 @@ the tag should be ignored, for example:</li>
             <span class="k">if</span> <span class="n">is_zipcode</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
                 <span class="n">v</span> <span class="o">=</span> <span class="n">update_zipcode</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">is_street_name</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
-                <span class="n">v</span> <span class="o">=</span> <span class="n">update_street_type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">update_street_type</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">mapping</span><span class="p">)</span>
 
             <span class="c1"># tags that contains &quot;:&quot;</span>
             <span class="n">split</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
@@ -12355,42 +12422,6 @@ Executing: mongoimport -h 127.0.0.1:27017 --db openstreetmap --collection vv --f
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Check if the data was imported correctly</span>
-<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">((</span><span class="n">db</span><span class="o">.</span><span class="n">vv</span><span class="o">.</span><span class="n">find_one</span><span class="p">()))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>{&#39;_id&#39;: ObjectId(&#39;58c9865a40efe73b937a4e4f&#39;),
- &#39;created&#39;: {&#39;changeset&#39;: &#39;6563535&#39;,
-             &#39;timestamp&#39;: &#39;2010-12-06T15:31:54Z&#39;,
-             &#39;uid&#39;: &#39;31385&#39;,
-             &#39;user&#39;: &#39;Skippern&#39;,
-             &#39;version&#39;: &#39;3&#39;},
- &#39;id&#39;: &#39;97464860&#39;,
- &#39;pos&#39;: [-20.3366098, -40.323035],
- &#39;type&#39;: &#39;node&#39;}
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -12412,7 +12443,7 @@ Executing: mongoimport -h 127.0.0.1:27017 --db openstreetmap --collection vv --f
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
@@ -12451,7 +12482,7 @@ The JSON file is 115.64 MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">vv</span><span class="o">.</span><span class="n">find</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
@@ -12465,7 +12496,7 @@ The JSON file is 115.64 MB
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[11]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[10]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12489,7 +12520,7 @@ The JSON file is 115.64 MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">vv</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;node&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
@@ -12503,7 +12534,7 @@ The JSON file is 115.64 MB
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[11]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12527,7 +12558,7 @@ The JSON file is 115.64 MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">vv</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;way&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
@@ -12541,7 +12572,7 @@ The JSON file is 115.64 MB
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[13]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12565,7 +12596,7 @@ The JSON file is 115.64 MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">vv</span><span class="o">.</span><span class="n">distinct</span><span class="p">(</span><span class="s2">&quot;created.user&quot;</span><span class="p">))</span>
@@ -12579,7 +12610,7 @@ The JSON file is 115.64 MB
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[13]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12603,7 +12634,7 @@ The JSON file is 115.64 MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">top</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">vv</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span>
@@ -12656,119 +12687,13 @@ The JSON file is 115.64 MB
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="List-of-amenities">List of amenities<a class="anchor-link" href="#List-of-amenities">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">top</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">vv</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span>
-                   <span class="p">{</span><span class="s2">&quot;$match&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;amenity&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$exists&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}}},</span>
-                   <span class="p">{</span><span class="s2">&quot;$group&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;_id&quot;</span> <span class="p">:</span> <span class="s2">&quot;$amenity&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$sum&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}}},</span>
-                   <span class="p">{</span><span class="s2">&quot;$sort&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}}])</span>
-
-<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">((</span><span class="nb">list</span><span class="p">(</span><span class="n">top</span><span class="p">)))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>[{&#39;_id&#39;: &#39;school&#39;, &#39;count&#39;: 330},
- {&#39;_id&#39;: &#39;place_of_worship&#39;, &#39;count&#39;: 243},
- {&#39;_id&#39;: &#39;parking&#39;, &#39;count&#39;: 174},
- {&#39;_id&#39;: &#39;kindergarten&#39;, &#39;count&#39;: 134},
- {&#39;_id&#39;: &#39;restaurant&#39;, &#39;count&#39;: 110},
- {&#39;_id&#39;: &#39;clinic&#39;, &#39;count&#39;: 95},
- {&#39;_id&#39;: &#39;fuel&#39;, &#39;count&#39;: 90},
- {&#39;_id&#39;: &#39;bank&#39;, &#39;count&#39;: 78},
- {&#39;_id&#39;: &#39;fast_food&#39;, &#39;count&#39;: 77},
- {&#39;_id&#39;: &#39;pharmacy&#39;, &#39;count&#39;: 61},
- {&#39;_id&#39;: &#39;police&#39;, &#39;count&#39;: 41},
- {&#39;_id&#39;: &#39;hospital&#39;, &#39;count&#39;: 40},
- {&#39;_id&#39;: &#39;community_centre&#39;, &#39;count&#39;: 28},
- {&#39;_id&#39;: &#39;social_facility&#39;, &#39;count&#39;: 26},
- {&#39;_id&#39;: &#39;public_building&#39;, &#39;count&#39;: 24},
- {&#39;_id&#39;: &#39;university&#39;, &#39;count&#39;: 21},
- {&#39;_id&#39;: &#39;doctors&#39;, &#39;count&#39;: 20},
- {&#39;_id&#39;: &#39;prison&#39;, &#39;count&#39;: 19},
- {&#39;_id&#39;: &#39;bench&#39;, &#39;count&#39;: 18},
- {&#39;_id&#39;: &#39;college&#39;, &#39;count&#39;: 14},
- {&#39;_id&#39;: &#39;bar&#39;, &#39;count&#39;: 14},
- {&#39;_id&#39;: &#39;pub&#39;, &#39;count&#39;: 13},
- {&#39;_id&#39;: &#39;bicycle_parking&#39;, &#39;count&#39;: 13},
- {&#39;_id&#39;: &#39;toilets&#39;, &#39;count&#39;: 13},
- {&#39;_id&#39;: &#39;car_wash&#39;, &#39;count&#39;: 12},
- {&#39;_id&#39;: &#39;taxi&#39;, &#39;count&#39;: 12},
- {&#39;_id&#39;: &#39;ice_cream&#39;, &#39;count&#39;: 12},
- {&#39;_id&#39;: &#39;studio&#39;, &#39;count&#39;: 11},
- {&#39;_id&#39;: &#39;cafe&#39;, &#39;count&#39;: 10},
- {&#39;_id&#39;: &#39;veterinary&#39;, &#39;count&#39;: 10},
- {&#39;_id&#39;: &#39;parking_entrance&#39;, &#39;count&#39;: 9},
- {&#39;_id&#39;: &#39;theatre&#39;, &#39;count&#39;: 9},
- {&#39;_id&#39;: &#39;bus_station&#39;, &#39;count&#39;: 9},
- {&#39;_id&#39;: &#39;dentist&#39;, &#39;count&#39;: 9},
- {&#39;_id&#39;: &#39;love_hotel&#39;, &#39;count&#39;: 9},
- {&#39;_id&#39;: &#39;courthouse&#39;, &#39;count&#39;: 8},
- {&#39;_id&#39;: &#39;shelter&#39;, &#39;count&#39;: 8},
- {&#39;_id&#39;: &#39;post_office&#39;, &#39;count&#39;: 8},
- {&#39;_id&#39;: &#39;atm&#39;, &#39;count&#39;: 7},
- {&#39;_id&#39;: &#39;nightclub&#39;, &#39;count&#39;: 7},
- {&#39;_id&#39;: &#39;townhall&#39;, &#39;count&#39;: 7},
- {&#39;_id&#39;: &#39;telephone&#39;, &#39;count&#39;: 6},
- {&#39;_id&#39;: &#39;marketplace&#39;, &#39;count&#39;: 6},
- {&#39;_id&#39;: &#39;drinking_water&#39;, &#39;count&#39;: 6},
- {&#39;_id&#39;: &#39;waste_basket&#39;, &#39;count&#39;: 4},
- {&#39;_id&#39;: &#39;recycling&#39;, &#39;count&#39;: 4},
- {&#39;_id&#39;: &#39;library&#39;, &#39;count&#39;: 4},
- {&#39;_id&#39;: &#39;register_office&#39;, &#39;count&#39;: 3},
- {&#39;_id&#39;: &#39;car_rental&#39;, &#39;count&#39;: 3},
- {&#39;_id&#39;: &#39;fountain&#39;, &#39;count&#39;: 3},
- {&#39;_id&#39;: &#39;fire_station&#39;, &#39;count&#39;: 2},
- {&#39;_id&#39;: &#39;vending_machine&#39;, &#39;count&#39;: 2},
- {&#39;_id&#39;: &#39;driving_school&#39;, &#39;count&#39;: 2},
- {&#39;_id&#39;: &#39;grave_yard&#39;, &#39;count&#39;: 2},
- {&#39;_id&#39;: &#39;nursing_home&#39;, &#39;count&#39;: 2},
- {&#39;_id&#39;: &#39;arts_centre&#39;, &#39;count&#39;: 1},
- {&#39;_id&#39;: &#39;embassy&#39;, &#39;count&#39;: 1},
- {&#39;_id&#39;: &#39;boat_rental&#39;, &#39;count&#39;: 1},
- {&#39;_id&#39;: &#39;convention_centre&#39;, &#39;count&#39;: 1},
- {&#39;_id&#39;: &#39;ferry_terminal;bus_station&#39;, &#39;count&#39;: 1},
- {&#39;_id&#39;: &#39;brothel&#39;, &#39;count&#39;: 1},
- {&#39;_id&#39;: &#39;cinema&#39;, &#39;count&#39;: 1},
- {&#39;_id&#39;: &#39;sw&#39;, &#39;count&#39;: 1},
- {&#39;_id&#39;: &#39;conference_centre&#39;, &#39;count&#39;: 1},
- {&#39;_id&#39;: &#39;social_centre&#39;, &#39;count&#39;: 1},
- {&#39;_id&#39;: &#39;motorcycle_parking&#39;, &#39;count&#39;: 1}]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Top-5-most-popular-cuisines">Top 5 most popular cuisines<a class="anchor-link" href="#Top-5-most-popular-cuisines">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">top</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">vv</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span>
@@ -12813,7 +12738,7 @@ The JSON file is 115.64 MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cuisines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">vv</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span>
@@ -12853,89 +12778,20 @@ Restaurants without cuisine defined: 41.82%
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>As can be observed, more than 40% of the restaurants don't have the cuisine field defined. This is an issue if this dataset would be used, for instance, by a restaurant recommendation app.</p>
 <p>One way to improve the quality of the dataset is to try to infer the cuisine from the restaurant name. For example, if the restaurant has "Natural" on its name, we could infer it's a vegetarian restaurant.</p>
-<p>The query below lists the name of all restaurants without cuisine.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;amenity&quot;</span><span class="p">:</span><span class="s2">&quot;restaurant&quot;</span><span class="p">,</span> <span class="s2">&quot;cuisine&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$exists&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$exists&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}}</span>
 <span class="n">projection</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;_id&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
 <span class="n">restaurants_without_cuisine</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">vv</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">projection</span><span class="p">)]</span>
 
-<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">restaurants_without_cuisine</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>[&#39;Grelhados e Massas Restaurante&#39;,
- &#39;Saborear&#39;,
- &#39;Sabor Natural&#39;,
- &#39;Restaurante Porteira&#39;,
- &#39;Restaurante Moenda&#39;,
- &#39;Restaurante Sol &amp; Mar&#39;,
- &#39;Restaurante Perfil&#39;,
- &#34;Restaurante Deboni&#39;s&#34;,
- &#39;VitaNutri&#39;,
- &#39;Restaurante Bom Apetite&#39;,
- &#39;Lagoa Grande Restaurante&#39;,
- &#39;Restaurante Vista da Mata&#39;,
- &#39;Comida Gostosa Self Service&#39;,
- &#39;Restaurante Villa Augusta&#39;,
- &#39;Lanchonete e Restaurante Schwanz&#39;,
- &#39;Outback&#39;,
- &#39;Restaurante Vegetariano&#39;,
- &#39;Restaurante Paulista&#39;,
- &#39;Sabor Riviera Restaurante e Self-Service&#39;,
- &#39;Restaurante Cantinho do Sabor&#39;,
- &#39;Terra do Sabor Restaurante e Self-Service&#39;,
- &#39;Belas Ondas Restaurante&#39;,
- &#39;Galantina Self Service&#39;,
- &#39;Trindade&#39;,
- &#39;Fast Food Maná&#39;,
- &#39;Tangerina&#39;,
- &#39;Vila Mix Gourmet&#39;,
- &#39;Recreio Restaurante&#39;,
- &#39;Q.Luxo Self Service&#39;,
- &#39;Ilha do Caranguejo&#39;,
- &#39;La Rafa&#39;,
- &#39;Bifão Steakhouse&#39;,
- &#39;Spetacollo&#39;,
- &#39;Argento Parrilla&#39;,
- &#39;Brazillian Burger&#39;,
- &#39;Restaurante Mar e Terra&#39;,
- &#39;Restaurante Popular&#39;,
- &#39;Restaurante da Tânia&#39;,
- &#39;Restaurante Dona Bá&#39;,
- &#39;Espaço Sorriso&#39;,
- &#39;Timoneiro Restaurante&#39;,
- &#39;Simonatto&#39;]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">name_cuisine_mapping</span> <span class="o">=</span> <span class="p">{</span>
+<span class="n">name_cuisine_mapping</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;Grelhados&quot;</span> <span class="p">:</span> <span class="s2">&quot;steak_house&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Natural&quot;</span> <span class="p">:</span> <span class="s2">&quot;vegetarian&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Outback&quot;</span> <span class="p">:</span> <span class="s2">&quot;steak_house&quot;</span><span class="p">,</span>
@@ -12946,7 +12802,11 @@ Restaurants without cuisine defined: 41.82%
     <span class="s2">&quot;Ondas&quot;</span> <span class="p">:</span> <span class="s2">&quot;seafood&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Mar&quot;</span> <span class="p">:</span> <span class="s2">&quot;seafood&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Terra&quot;</span><span class="p">:</span> <span class="s2">&quot;vegetarian&quot;</span><span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Mapping:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">name_cuisine_mapping</span><span class="p">)</span>
 
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Cuisines inferred from the restaurant</span><span class="se">\&#39;</span><span class="s1">s name:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">restaurants_without_cuisine</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">name_cuisine_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
@@ -12963,7 +12823,22 @@ Restaurants without cuisine defined: 41.82%
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Grelhados e Massas Restaurante =&gt; steak_house
+<pre>Mapping:
+
+{&#39;Burger&#39;: &#39;burger&#39;,
+ &#39;Caranguejo&#39;: &#39;seafood&#39;,
+ &#39;Grelhados&#39;: &#39;steak_house&#39;,
+ &#39;Mar&#39;: &#39;seafood&#39;,
+ &#39;Natural&#39;: &#39;vegetarian&#39;,
+ &#39;Ondas&#39;: &#39;seafood&#39;,
+ &#39;Outback&#39;: &#39;steak_house&#39;,
+ &#39;Steakhouse&#39;: &#39;steak_house&#39;,
+ &#39;Terra&#39;: &#39;vegetarian&#39;,
+ &#39;Vegetariano&#39;: &#39;vegetarian&#39;}
+
+Cuisines inferred from the restaurant&#39;s name:
+
+Grelhados e Massas Restaurante =&gt; steak_house
 Sabor Natural =&gt; vegetarian
 Restaurante Sol &amp; Mar =&gt; seafood
 Outback =&gt; steak_house
@@ -12988,7 +12863,7 @@ Restaurante Mar e Terra =&gt; vegetarian
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This apprach has some issues that have to be addressed.</p>
+<p>This approach has some issues that have to be addressed.</p>
 <p>For instance, "Mar" (sea in Portuguese) was mapped to "seafood" and "Terra" (soil in Portuguese) was mapped to "vegetarian". The restaurant "Restaurante Mar e Terra" has both words on its name and the classification could be wrong. In this case, we could define a prioritization in the mapping to classify to seafood rather than vegetarian, as vegetarian restaurants are not supposed to cook any kind of animal.</p>
 <p>Another problem could be the wrong classifications. For example, "STK South Beach" is a steak house in Miami that would be wrong classified as seafood because of the word "Beach". In this case we could use other sources like Google Maps or Facebook to enhance the dataset.</p>
 
