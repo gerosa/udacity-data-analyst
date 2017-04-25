@@ -55,17 +55,10 @@ labels, features = targetFeatureSplit(data)
 ### you'll need to use Pipelines. For more info:
 ### http://scikit-learn.org/stable/modules/pipeline.html
 
-# Provided to give you a starting point. Try a variety of classifiers.
-#from sklearn.naive_bayes import GaussianNB
-#clf = GaussianNB()
 
+# the best classification algorithm and hyperparameter as documented in final_report.ipynb / final_report.html
 from sklearn import tree
 clf = tree.DecisionTreeClassifier(criterion='entropy', min_samples_split = 20)
-
-#from sklearn.linear_model import LogisticRegression
-#clf = LogisticRegression(C=10, penalty='l1')
-
-
 
 
 ### Task 6: Dump your classifier, dataset, and features_list so anyone can
@@ -75,7 +68,7 @@ clf = tree.DecisionTreeClassifier(criterion='entropy', min_samples_split = 20)
 
 dump_classifier_and_data(clf, my_dataset, features_list)
 
-from tester import test_classifier
-test_classifier(clf, my_dataset, features_list)
+#from tester import test_classifier
+#test_classifier(clf, my_dataset, features_list)
 
 
