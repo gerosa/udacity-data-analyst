@@ -19,8 +19,10 @@ def computeFraction( poi_messages, all_messages ):
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
-features_list = ['poi', 'bonus', 'exercised_stock_options', 'total_stock_value', 'fraction_to_poi', 'salary', 'total_payments', 'shared_receipt_with_poi']
-#features_list = ['poi', 'bonus', 'exercised_stock_options', 'total_stock_value', 'fraction_to_poi', 'salary', 'total_payments', 'shared_receipt_with_poi', 'deferred_income', 'restricted_stock', 'loan_advances', 'long_term_incentive', 'other', 'to_messages', 'expenses', 'director_fees', 'fraction_from_poi', 'restricted_stock_deferred', 'from_messages', 'deferral_payments']
+features_list = ['poi', 'bonus', 'exercised_stock_options', 'total_stock_value', 'fraction_to_poi', 'salary', 'total_payments', 'shared_receipt_with_poi', 'deferred_income', 'restricted_stock', 'loan_advances', 'long_term_incentive', 'other', 'to_messages', 'expenses', 'director_fees', 'fraction_from_poi', 'restricted_stock_deferred', 'from_messages', 'deferral_payments']
+k_best = 16
+
+features_list = features_list[:k_best]
 
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
@@ -54,38 +56,17 @@ labels, features = targetFeatureSplit(data)
 ### http://scikit-learn.org/stable/modules/pipeline.html
 
 # Provided to give you a starting point. Try a variety of classifiers.
-from sklearn.naive_bayes import GaussianNB
-clf = GaussianNB()
+#from sklearn.naive_bayes import GaussianNB
+#clf = GaussianNB()
 
-#from sklearn import tree
-#clf = tree.DecisionTreeClassifier(min_samples_split = 10)
+from sklearn import tree
+clf = tree.DecisionTreeClassifier(criterion='entropy', min_samples_split = 20)
 
-#from sklearn.ensemble import RandomForestClassifier
-#clf = RandomForestClassifier(n_estimators=100, criterion='entropy')
-
-
-#from sklearn.grid_search import GridSearchCV
+#from sklearn.linear_model import LogisticRegression
+#clf = LogisticRegression(C=10, penalty='l1')
 
 
-#param_grid = {
-#        'min_samples_split': [10, 15, 20],
-#        'max_features': ['auto', .5, None],
-#        'class_weight': ['balanced', None]}
 
-#clf = GridSearchCV(clf, param_grid)
-
-
-### Task 5: Tune your classifier to achieve better than .3 precision and recall 
-### using our testing script. Check the tester.py script in the final project
-### folder for details on the evaluation method, especially the test_classifier
-### function. Because of the small size of the dataset, the script uses
-### stratified shuffle split cross validation. For more info: 
-### http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.StratifiedShuffleSplit.html
-
-# Example starting point. Try investigating other evaluation techniques!
-from sklearn.cross_validation import train_test_split
-features_train, features_test, labels_train, labels_test = \
-    train_test_split(features, labels, test_size=0.3, random_state=42)
 
 ### Task 6: Dump your classifier, dataset, and features_list so anyone can
 ### check your results. You do not need to change anything below, but make sure
@@ -94,42 +75,7 @@ features_train, features_test, labels_train, labels_test = \
 
 dump_classifier_and_data(clf, my_dataset, features_list)
 
-
-# Remove this
-
-clf.fit(features_train, labels_train)
-
-#print clf.best_estimator_
-
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import recall_score
-from sklearn.metrics import precision_score
-
-predictions = clf.predict(features_test)
-
-print('Confusion Matrix')
-print(confusion_matrix(labels_test, predictions))
-
-print('Accuracy: {}'.format(accuracy_score(labels_test, predictions) ) )
-print('Recall: {}'.format(recall_score(labels_test, predictions) )) 
-print('Precision: {}'.format(precision_score(labels_test, predictions) )) 
-
-predictions = clf.predict(features_train)
-
-print('Confusion Matrix')
-print(confusion_matrix(labels_train, predictions))
-
-print('Accuracy: {}'.format(accuracy_score(labels_train, predictions) ) )
-print('Recall: {}'.format(recall_score(labels_train, predictions) )) 
-print('Precision: {}'.format(precision_score(labels_train, predictions) )) 
-
-
-
-
-
-
-
-
+from tester import test_classifier
+test_classifier(clf, my_dataset, features_list)
 
 
