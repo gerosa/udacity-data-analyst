@@ -20,7 +20,7 @@ def computeFraction( poi_messages, all_messages ):
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
 features_list = ['poi', 'bonus', 'exercised_stock_options', 'total_stock_value', 'fraction_to_poi', 'salary', 'total_payments', 'shared_receipt_with_poi', 'deferred_income', 'restricted_stock', 'loan_advances', 'long_term_incentive', 'other', 'to_messages', 'expenses', 'director_fees', 'fraction_from_poi', 'restricted_stock_deferred', 'from_messages', 'deferral_payments']
-k_best = 16
+k_best = 6
 
 features_list = features_list[:k_best]
 
