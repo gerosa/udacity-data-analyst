@@ -30,6 +30,8 @@ with open("final_project_dataset.pkl", "r") as data_file:
 
 ### Task 2: Remove outliers
 del data_dict['TOTAL']
+del data_dict['LOCKHART EUGENE E']
+del data_dict['THE TRAVEL AGENCY IN THE PARK']
 
 ### Task 3: Create new feature(s)
 for name in data_dict:
