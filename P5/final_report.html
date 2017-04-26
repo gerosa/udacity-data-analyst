@@ -11988,7 +11988,7 @@ Features: 20
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The chart below shows the distribution between POI's and non POI's</p>
+<p>The chart below shows the distribution between POIs and non-POIs</p>
 
 </div>
 </div>
@@ -12433,11 +12433,11 @@ AABJRU5ErkJggg==
 </tr>
 <tr>
 <td style="text-align:left">bonus</td>
-<td style="text-align:left">Reflects annual cash incentives paid based upon company performance. Also may include other retention payments.</td>
+<td style="text-align:left">Reflects annual cash incentives paid based upon company performance. Also, may include other retention payments.</td>
 </tr>
 <tr>
 <td style="text-align:left">long_term_incentive</td>
-<td style="text-align:left">Reflects long-term incentive cash payments from various long-term incentive programs designed to tie executive compensation to long-term success as measuredagainst key performance drivers and business objectives over a multi-year period, generally 3 to 5 years.</td>
+<td style="text-align:left">Reflects long-term incentive cash payments from various long-term incentive programs designed to tie executive compensation to long-term success as measured against key performance drivers and business objectives over a multi-year period, generally 3 to 5 years.</td>
 </tr>
 <tr>
 <td style="text-align:left">deferred_income</td>
@@ -12639,7 +12639,7 @@ AABJRU5ErkJggg==
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Outliers">Outliers<a class="anchor-link" href="#Outliers">&#182;</a></h3><p>The dataset contains a huge outlier as can be observed ploting the <em>salary</em> and <em>bonus</em> features:</p>
+<h3 id="Outliers">Outliers<a class="anchor-link" href="#Outliers">&#182;</a></h3><p>The dataset contains a huge outlier as can be observed plotting the <em>salary</em> and <em>bonus</em> features:</p>
 
 </div>
 </div>
@@ -12757,7 +12757,7 @@ O8W8v/YB//0AAAAASUVORK5CYII=
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This outlier is actually a bug in the parser of the financial PDF that extract the row "TOTAL" as a person.</p>
+<p>This outlier is actually a bug in the parser of the financial PDF that extracts the row "TOTAL" as a person.</p>
 
 </div>
 </div>
@@ -12854,7 +12854,7 @@ O8W8v/YB//0AAAAASUVORK5CYII=
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Another observation that can be removed after manual review of the dataset is the <em>"THE TRAVEL AGENCY IN THE PARK"</em> which is cleary not a person.</p>
+<p>Another observation that can be removed after a manual review of the dataset is the <em>"THE TRAVEL AGENCY IN THE PARK"</em> which is clearly not a person.</p>
 
 </div>
 </div>
@@ -13166,7 +13166,7 @@ dtype: int64</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="E-mails-exchanged-with-POI">E-mails exchanged with POI<a class="anchor-link" href="#E-mails-exchanged-with-POI">&#182;</a></h3><p>A set of features that might help to predict POI's is the <em>from_poi_to_this_person</em> and <em>from_this_person_to_poi</em>. The scatter plot below shows the relation of these features and POI.</p>
+<h3 id="E-mails-exchanged-with-POI">E-mails exchanged with POI<a class="anchor-link" href="#E-mails-exchanged-with-POI">&#182;</a></h3><p>A set of features that might help to predict POIs is the <em>from_poi_to_this_person</em> and <em>from_this_person_to_poi</em>. The scatter plot below shows the relation of these features and POI.</p>
 
 </div>
 </div>
@@ -13802,10 +13802,10 @@ dtype: float64
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Machine-Learning-Algorithm">Machine Learning Algorithm<a class="anchor-link" href="#Machine-Learning-Algorithm">&#182;</a></h2><p>In order to choose the best algorithm, the performance of 3 different algorithms were compared: Naive Bayes, Decision Tree, and Logistic Regression.</p>
+<h2 id="Machine-Learning-Algorithm">Machine Learning Algorithm<a class="anchor-link" href="#Machine-Learning-Algorithm">&#182;</a></h2><p>In order to choose the best algorithm, the performance of 3 different algorithms was compared: Naive Bayes, Decision Tree, and Logistic Regression.</p>
 <h3 id="Parameter-Tuning-Strategy">Parameter Tuning Strategy<a class="anchor-link" href="#Parameter-Tuning-Strategy">&#182;</a></h3><p>Tuning the parameters of an algorithm means adjusting the parameters in a certain way to achieve optimal performance. If the parameters are not tuned well, performance may suffer. The data won't be "learned" well and the algorithm won't be able to successfully make predictions on new data.</p>
-<p>The tuning process could be very time consuming and tedious if done manually. In order to automate this process, it was used <a href="http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">GridSearchCV</a> which allow to test all the combinations of parameters and then report back the best one.</p>
-<p>As mentioned earlier, the selection of the best features was added as part of the tuning process using a <a href="http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">Pipeline</a> with two steps: first the <em>k</em> best features are selected using <a href="http://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectKBest.html">SelectKBest</a> and next, the classification task is perfomed. Then, GridSearchCV was used to find the best <em>k</em> value and the best algorithm parameters.</p>
+<p>The tuning process could be very time-consuming and tedious if done manually. In order to automate this process, it was used <a href="http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html">GridSearchCV</a> which allow to test all the combinations of parameters and then report back the best one.</p>
+<p>As mentioned earlier, the selection of the best features was added as part of the tuning process using a <a href="http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">Pipeline</a> with two steps: first, the <em>k</em> best features are selected using <a href="http://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectKBest.html">SelectKBest</a> and next, the classification task is performed. Then, GridSearchCV was used to find the best <em>k</em> value and the best algorithm parameters.</p>
 
 </div>
 </div>
