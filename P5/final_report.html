@@ -13440,7 +13440,7 @@ mZXlAGFmZmU5QJiZWVkOEGZmVpYDhJmZlfX/AeVF2Y5vUfDGAAAAAElFTkSuQmCC
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.legend.Legend at 0x10fe14350&gt;</pre>
+<pre>&lt;matplotlib.legend.Legend at 0x11b156ad0&gt;</pre>
 </div>
 
 </div>
@@ -13825,7 +13825,7 @@ dtype: float64
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.grid_search</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
@@ -13899,7 +13899,7 @@ dtype: float64
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">GaussianNB</span>
@@ -13982,7 +13982,7 @@ avg / total       0.87      0.60      0.67        43
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">tree</span>
@@ -13997,7 +13997,7 @@ avg / total       0.87      0.60      0.67        43
 <span class="n">evaluateClassifier</span><span class="p">(</span><span class="s1">&#39;Decision Tree&#39;</span><span class="p">,</span> <span class="n">clf</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
 
 <span class="n">clf</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">DecisionTreeClassifier</span><span class="p">()</span>
-<span class="n">evaluateClassifier</span><span class="p">(</span><span class="s1">&#39;Decision Tree Scaled&#39;</span><span class="p">,</span> <span class="n">clf</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+<span class="n">evaluateClassifier</span><span class="p">(</span><span class="s1">&#39;Decision Tree Scaled&#39;</span><span class="p">,</span> <span class="n">clf</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -14021,14 +14021,14 @@ avg / total       0.87      0.60      0.67        43
 
 avg / total       0.91      0.86      0.88        43
 
-Using original features
-{&#39;feature_selection__k&#39;: 6, &#39;classification__min_samples_split&#39;: 20, &#39;classification__criterion&#39;: &#39;entropy&#39;}
+Using scaled features
+{&#39;feature_selection__k&#39;: 17, &#39;classification__min_samples_split&#39;: 15, &#39;classification__criterion&#39;: &#39;entropy&#39;}
              precision    recall  f1-score   support
 
-      False       0.97      0.87      0.92        38
-       True       0.44      0.80      0.57         5
+      False       0.97      0.89      0.93        38
+       True       0.50      0.80      0.62         5
 
-avg / total       0.91      0.86      0.88        43
+avg / total       0.92      0.88      0.89        43
 
 </pre>
 </div>
@@ -14043,7 +14043,7 @@ avg / total       0.91      0.86      0.88        43
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The algorithm performance was exactly the same using and not using the scaled features.</p>
+<p>The algorithm performance was slightly better using the scaled features.</p>
 
 </div>
 </div>
@@ -14059,7 +14059,7 @@ avg / total       0.91      0.86      0.88        43
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
@@ -14171,7 +14171,7 @@ avg / total       0.83      0.86      0.84        43
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">results</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;f1_score&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -14186,7 +14186,7 @@ avg / total       0.83      0.86      0.84        43
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[25]:</div>
+<div class="prompt output_prompt">Out[24]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -14202,13 +14202,13 @@ avg / total       0.83      0.86      0.84        43
   </thead>
   <tbody>
     <tr>
-      <th>Decision Tree</th>
-      <td>0.444444</td>
+      <th>Decision Tree Scaled</th>
+      <td>0.500000</td>
       <td>0.8</td>
-      <td>0.571429</td>
+      <td>0.615385</td>
     </tr>
     <tr>
-      <th>Decision Tree Scaled</th>
+      <th>Decision Tree</th>
       <td>0.444444</td>
       <td>0.8</td>
       <td>0.571429</td>
@@ -14253,7 +14253,7 @@ avg / total       0.83      0.86      0.84        43
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The winner algorithm was Decision Tree and scaling doesn't matter in this case.</p>
+<p>The winner algorithm was Decision Tree with scaled features!</p>
 
 </div>
 </div>
