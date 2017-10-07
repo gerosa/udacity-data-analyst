@@ -1,0 +1,419 @@
+Brazilian Consumer Complaints by Luiz Gerosa
+========================================================
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
+# Load all of the packages that you end up using in your analysis in this code
+# chunk.
+
+# Notice that the parameter "echo" was set to FALSE for this code chunk. This
+# prevents the code from displaying in the knitted HTML output. You should set
+# echo=FALSE for all code chunks in your file, unless it makes sense for your
+# report to show the code that generated a particular plot.
+
+# The other parameters for "message" and "warning" should also be set to FALSE
+# for other code chunks once you have verified that each plot comes out as you
+# want it to. This will clean up the flow of your report.
+
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(stringr)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Load_the_Data}
+# Load the Data
+Sys.setlocale(category = "LC_ALL", locale = "pt_BR.UTF-8")
+ds = read.csv("data/reclamacoes-fundamentadas-sindec-2015.csv", 
+              sep=';', encoding='utf-8', stringsAsFactors = FALSE, strip.white = TRUE)
+
+# keeping only columns used in this analysis
+ds <- subset(ds, select=c(AnoCalendario, DataArquivamento, DataAbertura, UF,
+                          strRazaoSocial, Tipo,
+                          Atendida, DescricaoProblema, SexoConsumidor,
+                          FaixaEtariaConsumidor))
+
+# renaming
+names(ds) <- c('year', 'closingDate', 'registerDate', 'state', 'companyName',
+               'type', 'resolved', 'issue', 'gender', 'age')
+
+# replacing empty cells with NA
+ds[ds == ''] <- NA
+ds[ds == 'NULL'] <- NA
+ds$gender[ds$gender == 'N'] <- NA
+
+# removing rows with any missing value (NA)
+ds <- na.omit(ds)
+
+# keeping only complaints of companies (type == 1)
+ds <- ds[ds$type == 1,]
+ds$type <- NULL
+
+# fixing data types
+ds$closingDate <- as.Date(ds$closingDate)
+ds$registerDate <- as.Date(ds$registerDate)
+ds$state <- as.factor(ds$state)
+ds$companyName <- as.factor(ds$companyName)
+ds$resolved <- as.factor(ds$resolved)
+ds$gender <- as.factor(ds$gender)
+ds$age <- as.factor(ds$age)
+ds$issue <- as.factor(ds$issue)
+
+# translating age ranges
+ds$age <- recode(ds$age,
+                 `até 20 anos` = '<20',
+                 `entre 21 a 30 anos` = '21 to 30',
+                 `entre 31 a 40 anos` = '31 to 40',
+                 `entre 41 a 50 anos` = '41 to 50',
+                 `entre 51 a 60 anos` = '51 to 60',
+                 `entre 61 a 70 anos` = '61 to 70',
+                 `mais de 70 anos` = '>70',
+                 `Nao Informada` = 'not informed')
+
+# translating S (sim) to Y (yes)
+ds$resolved <- recode(ds$resolved, S = 'Y', N = 'N')
+
+# creating a new continuous variable
+ds$elapsedDays <- as.numeric(ds$closingDate - ds$registerDate)
+
+# cleaning wrong chars
+ds$companyName <- sub('[@|\\.]$', '', ds$companyName)
+
+# very basic normalizations of company types
+ds$companyName <- sub('S[\\.|\\/]+A.*$', 'S/A', ds$companyName)
+ds$companyName <- sub('LTDA*$', 'LTDA', ds$companyName)
+
+# fix typos for most frequent companies
+ds$companyName <- sub('SERVICOS', 'SERVIÇOS', ds$companyName)
+ds$companyName <- sub('ECONOMICA', 'ECONÔMICA', ds$companyName)
+ds$companyName <- sub('COMUNICA[C|Ç][A|Ã]O', 'COMUNICAÇÃO', ds$companyName)
+ds$companyName <- sub('COMUNICACOES', 'COMUNICAÇÕES', ds$companyName)
+ds$companyName <- sub('- CEF$', '', ds$companyName)
+ds$companyName <- sub('^OI.+S/A$', 'OI S/A', ds$companyName)
+
+ds$companyName <- str_trim(ds$companyName)
+
+```
+
+# Introduction
+When Brazilian consumers need to resolve a dispute with business the first step 
+is to go to a local Procon (Consumer Protection Agency) and file a complaint.
+The Procon assists the consumer and intermediates the resolution with the
+company
+
+# DataSet Overview
+
+The [dataset](http://dados.gov.br/dataset/cadastro-nacional-de-reclamacoes-fundamentadas-procons-sindec1)
+used in this analysis contains information about complaints made in 2015 and it
+was download from official Brazilian government open data website: http://dados.gov.br. 
+
+
+```{r echo=FALSE, results = 'asis'}
+kable(head(ds))
+```
+
+### Summary
+```{r echo=FALSE}
+summary(ds)
+```
+
+### Top 10 most common complaints (in Portugues)
+```{r echo=FALSE}
+issueFrequency <- count(ds, issue)
+issueFrequency <- arrange(issueFrequency, desc(n))
+kable(head(issueFrequency, 10))
+```
+
+### Top 10 most frequent companies
+```{r echo=FALSE}
+top_companies <- count(ds, companyName)
+top_companies <- arrange(top_companies, desc(n))
+top_companies <- top_companies[1:100, ]
+kable(head(top_companies, 10))
+```
+
+# Univariate Plots Section
+
+```{r echo=FALSE}
+resolved <- ds %>%
+  group_by(resolved) %>%
+  summarise (n = n()) %>%
+  mutate(freq = n / sum(n))
+
+resolutionRate <- as.double(resolved[2, 'freq'])
+
+pct <- paste(round(resolved$freq*100), '%', sep = '')
+pie(resolved$freq, paste(resolved$resolved, pct, sep = ' - '))
+```
+
+The resolution rate is about 65%.
+
+```{r echo=FALSE}
+gender <- ds %>%
+  group_by(gender) %>%
+  summarise (n = n()) %>%
+  mutate(freq = n / sum(n))
+
+pct <- paste(round(gender$freq*100), '%', sep='')
+pie(gender$freq, paste(gender$gender, pct, sep = ' - '))
+```
+
+54% of complaints came from women vs 46% from men.
+
+```{r echo=FALSE}
+qplot(x = ds$state, data = ds)
+```
+
+The state with most complaints is São Paulo.
+
+```{r echo=FALSE}
+qplot(x = ds$age, data = ds)
+```
+
+Most complaints are made by people between 31 and 40 years old.
+
+```{r echo=FALSE, warning=FALSE}
+ggplot(aes(x = elapsedDays), data = ds) +
+  geom_histogram(binwidth = 5) +
+  scale_x_continuous(limits = c(0, 500), breaks = seq(0, 500, 20))
+```
+
+The number of days to close an issue has a long tail.
+
+```{r echo=FALSE, warning=FALSE}
+ggplot(aes(x = elapsedDays), data = ds) +
+  geom_histogram(binwidth = 0.2) +
+  scale_x_log10()
+```
+
+The number of days to close an issue has a normal distribution on the log10 
+scale.
+
+# Univariate Analysis
+
+### What is the structure of your dataset?
+
+After cleaning missing values, removing columns not used in this analysis and 
+adding a new one, the dataset contains around 221k complaints and 10 variables.
+
+```{r}
+dim(ds)
+```
+
+### What is/are the main feature(s) of interest in your dataset?
+
+The main feature is _"resolved"_ which indicates if the complaint was resolved
+with the company.
+
+### What other features in the dataset do you think will help support your \
+investigation into your feature(s) of interest?
+
+Categorical features like gender, state, age, etc.
+
+### Did you create any new variables from existing variables in the dataset?
+
+Yes. I calculated the elapsed time in days between the registration date and the
+closing date.
+
+### Of the features you investigated, were there any unusual distributions? \
+Did you perform any operations on the data to tidy, adjust, or change the form \
+of the data? If so, why did you do this?
+
+The distribution of complaints per state looks interesting. São Paulo is the state
+with most complaints, but also is the most populous state in Brazil: https://en.wikipedia.org/wiki/List_of_Brazilian_states_by_population
+Pernambuco is in the second state with most complaints, but only the 7th
+in the population ranking. In the final plots, I will investigate this behavior
+further.
+
+I did some basic data wrangling in the company name so it can be counted correctly.
+
+# Bivariate Plots Section
+
+```{r echo=FALSE, Bivariate_Plots}
+
+gender_resolved <- ds %>%
+  group_by(gender, resolved) %>%
+  summarise (n = n()) %>%
+  mutate(freq = n / sum(n))
+
+ggplot(gender_resolved, aes(x=gender,y=freq,fill=factor(resolved)))+
+  geom_bar(stat="identity") +
+  geom_hline(yintercept = resolutionRate)
+```
+
+Men and women have practically the same chance to have their issues resolved.
+
+```{r echo=FALSE}
+
+state_resolved <- ds %>%
+  group_by(state, resolved) %>%
+  summarise (n = n()) %>%
+  mutate(freq = n / sum(n)) %>%
+  arrange(freq)
+
+ggplot(state_resolved, aes(x=state, y=freq, fill=factor(resolved))) +
+  geom_bar(stat="identity") +
+  geom_hline(yintercept = resolutionRate)
+```
+
+Consumers in some states have a much higher chance to resolve their issues.
+
+```{r echo=FALSE}
+
+age_resolved <- ds %>%
+  group_by(age, resolved) %>%
+  summarise (n = n()) %>%
+  mutate(freq = n / sum(n)) %>%
+  arrange(freq)
+
+ggplot(age_resolved, aes(x=age, y=freq, fill=factor(resolved))) +
+  geom_bar(stat="identity") +
+  geom_hline(yintercept = resolutionRate)
+```
+
+The youngest and the oldest age intervals have a little higher resolution rate.
+When the age is not informed, the resolution rate is smaller.
+
+```{r echo=FALSE}
+
+company_resolved <- ds %>%
+  group_by(companyName, resolved) %>%
+  summarise (n = n()) %>%
+  spread(resolved, n, fill=0) %>%
+  arrange(desc(N+Y)) %>%
+  mutate(freq = Y / (N+Y))
+
+kable(head(company_resolved, 10))
+```
+
+Resolution rate for the top 10 most frequent companies. OI S/A is the company
+with most complaints but also has a very high resolution rate.
+
+```{r echo=FALSE, warning=FALSE}
+qplot(x = ds$elapsedDays, data = ds, binwidth = 5) + 
+  scale_x_continuous(limits = c(0, 500), breaks = seq(0, 500, 20)) +
+  facet_grid(resolved ~ .) 
+```
+
+The shape of the distribution of the number of days to close an issue doesn't
+change if the issue was resolved or not.
+
+```{r echo=FALSE}
+ds$elapsedDaysIntervals <- cut( ds$elapsedDays, 
+                                breaks = c(0, 5, 10, 20, 30, 45, 60, 90, 120, 360, 720, 1080, 10^4),
+                                include.lowest = TRUE)
+
+elapseDaysIntervals_resolved <- ds %>%
+  group_by(elapsedDaysIntervals, resolved) %>%
+  summarise (n = n()) %>%
+  mutate(freq = n / sum(n)) %>%
+  arrange(freq)
+
+ggplot(elapseDaysIntervals_resolved, aes(x=elapsedDaysIntervals, y=freq, fill=factor(resolved))) +
+  geom_bar(stat="identity") +
+  geom_hline(yintercept = resolutionRate)
+
+```
+
+The issue has a better chance to be resolved between 5 and 10 days after its
+registration date. After 60 days, the resolution rate starts to decline.
+
+```{r echo=FALSE}
+
+state_gender <- ds %>%
+  group_by(state, gender) %>%
+  summarise (n = n()) %>%
+  mutate(freq = n / sum(n)) %>%
+  arrange(freq)
+
+man_rate = as.double(gender[2, 'freq'])
+
+ggplot(state_gender, aes(x=state, y=freq, fill=factor(gender))) +
+  geom_bar(stat="identity") +
+  geom_hline(yintercept = man_rate)
+```
+
+Women and men complaints per state have a little variation.
+
+```{r echo=FALSE}
+
+age_gender <- ds %>%
+  group_by(age, gender) %>%
+  summarise (n = n()) %>%
+  mutate(freq = n / sum(n)) %>%
+  arrange(freq)
+
+ggplot(age_gender, aes(x=age, y=freq, fill=factor(gender))) +
+  geom_bar(stat="identity") +
+  geom_hline(yintercept = man_rate)
+```
+
+Women and men complaints per age interval have a little variation.
+Men do not inform their age more frequently than women.
+
+# Bivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the \
+investigation. How did the feature(s) of interest vary with other features in \
+the dataset?
+
+The resolution rate varies a lot depending on the state and the number of days
+it takes to close the complaint.
+
+### Did you observe any interesting relationships between the other features \
+(not the main feature(s) of interest)?
+
+Men don't inform their age more frequently than women. The popular belief
+that women hide their age more often is not true in this case.
+
+### What was the strongest relationship you found?
+
+The state where the complaint was filed has a strong impact on the resolution
+rate.
+
+------
+
+# Final Plots and Summary
+
+> **Tip**: You've done a lot of exploration and have built up an understanding
+of the structure of and relationships between the variables in your dataset.
+Here, you will select three plots from all of your previous exploration to
+present here as a summary of some of your most interesting findings. Make sure
+that you have refined your selected plots for good titling, axis labels (with
+units), and good aesthetic choices (e.g. color, transparency). After each plot,
+make sure you justify why you chose each plot by describing what it shows.
+
+### Plot One
+```{r echo=FALSE, Plot_One}
+
+```
+
+### Description One
+
+
+### Plot Two
+```{r echo=FALSE, Plot_Two}
+
+```
+
+### Description Two
+
+
+### Plot Three
+```{r echo=FALSE, Plot_Three}
+
+```
+
+### Description Three
+
+------
+
+# Reflection
+
+> **Tip**: Here's the final step! Reflect on the exploration you performed and
+the insights you found. What were some of the struggles that you went through?
+What went well? What was surprising? Make sure you include an insight into
+future work that could be done with the dataset.
+
+> **Tip**: Don't forget to remove this, and the other **Tip** sections before
+saving your final work and knitting the final report!
