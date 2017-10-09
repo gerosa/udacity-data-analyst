@@ -219,12 +219,6 @@ closing date.
 Did you perform any operations on the data to tidy, adjust, or change the form \
 of the data? If so, why did you do this?
 
-The distribution of complaints per state looks interesting. São Paulo is the state
-with most complaints, but also is the most populous state in Brazil: https://en.wikipedia.org/wiki/List_of_Brazilian_states_by_population
-Pernambuco is in the second state with most complaints, but only the 7th
-in the population ranking. In the final plots, I will investigate this behavior
-further.
-
 I did some basic data wrangling in the company name so it can be counted correctly.
 
 # Bivariate Plots Section
@@ -385,6 +379,22 @@ make sure you justify why you chose each plot by describing what it shows.
 
 ### Plot One
 ```{r echo=FALSE, Plot_One}
+
+state_ordered <- reorder(
+  state_resolved[state_resolved$resolved == 'Y', ]$state,
+  state_resolved[state_resolved$resolved == 'Y', ]$freq)
+
+state_resolved$state <- factor(state_resolved$state, levels(state_ordered))
+
+ggplot(state_resolved, aes(x=state, y=freq, fill=factor(resolved))) +
+  geom_bar(stat="identity") +
+  scale_fill_discrete(name = "Resolved") +
+  geom_text(aes(3.8, resolutionRate,label = 'Avg. resolution rate', vjust = -0.5)) +
+  geom_hline(yintercept = resolutionRate, linetype="dashed") +
+  scale_y_continuous(labels = scales::percent, breaks = c(resolutionRate, seq(0, 1, 0.2))) +
+  xlab('State') + 
+  ylab('Resolution rate') +
+  ggtitle("Resolution rate of complaints per state")
 
 ```
 
