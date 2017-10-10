@@ -294,7 +294,7 @@ change if the issue was resolved or not.
 
 ```{r echo=FALSE}
 ds$elapsedDaysIntervals <- cut( ds$elapsedDays, 
-                                breaks = c(0, 5, 10, 20, 30, 45, 60, 90, 120, 360, 720, 1080, 10^4),
+                                breaks = c(0, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 180, 360, 720, 1080, 10^4),
                                 include.lowest = TRUE)
 
 elapseDaysIntervals_resolved <- ds %>%
@@ -327,7 +327,44 @@ ggplot(state_gender, aes(x=state, y=freq, fill=factor(gender))) +
   geom_hline(yintercept = man_rate)
 ```
 
-Women and men complaints per state have a little variation.
+```{r echo=FALSE}
+
+state_gender <- ds %>%
+  group_by(state, gender) %>%
+  summarise (n = n()) %>%
+  mutate(freq = n / sum(n)) %>%
+  arrange(freq)
+
+man_rate = as.double(gender[2, 'freq'])
+
+ggplot(state_gender, aes(x=state, y=freq, fill=factor(gender))) +
+  geom_bar(stat="identity") +
+  geom_hline(yintercept = man_rate)
+```
+
+Women and men complaints per state are uniformly distributed.
+
+```{r echo=FALSE}
+
+state_resolved_elapsedays <- ds %>%
+  group_by(state, resolved) %>%
+  summarise(median = median(elapsedDays))
+
+ggplot(state_resolved_elapsedays, aes(x=state, y=median)) +
+  geom_bar(aes(fill = resolved), position = "dodge", stat="identity")
+```
+
+Some states (e.g. AP, PB and TO) have a huge difference between 
+median time to close an issue when it was resolved or not.
+
+```{r echo=FALSE}
+
+ggplot(subset(state_resolved_elapsedays, (resolved == 'Y')), aes(x=state, y=median)) +
+  geom_bar(aes(fill = resolved), position = "dodge", stat="identity")
+```
+
+Observing only resolved issues, we can have a better sense of the median time 
+resolve an issue on different states.
 
 ```{r echo=FALSE}
 
@@ -342,7 +379,7 @@ ggplot(age_gender, aes(x=age, y=freq, fill=factor(gender))) +
   geom_hline(yintercept = man_rate)
 ```
 
-Women and men complaints per age interval have a little variation.
+Women and men complaints per age interval are uniformly distributed.
 Men do not inform their age more frequently than women.
 
 # Bivariate Analysis
@@ -357,8 +394,7 @@ it takes to close the complaint.
 ### Did you observe any interesting relationships between the other features \
 (not the main feature(s) of interest)?
 
-Men don't inform their age more frequently than women. The popular belief
-that women hide their age more often is not true in this case.
+The median time to resolve an issue varies a lot state by state. 
 
 ### What was the strongest relationship you found?
 
@@ -377,36 +413,49 @@ that you have refined your selected plots for good titling, axis labels (with
 units), and good aesthetic choices (e.g. color, transparency). After each plot,
 make sure you justify why you chose each plot by describing what it shows.
 
-### Plot One
+### Resolution rate per state
 ```{r echo=FALSE, Plot_One}
 
-state_ordered <- reorder(
-  state_resolved[state_resolved$resolved == 'Y', ]$state,
-  state_resolved[state_resolved$resolved == 'Y', ]$freq)
+state_resolved <- subset(state_resolved, (resolved == 'Y'))
 
-state_resolved$state <- factor(state_resolved$state, levels(state_ordered))
+state_resolved$state <- factor(state_resolved$state,
+                          levels(reorder(state_resolved$state, state_resolved$freq)))
 
-ggplot(state_resolved, aes(x=state, y=freq, fill=factor(resolved))) +
-  geom_bar(stat="identity") +
-  scale_fill_discrete(name = "Resolved") +
+breaks = c(resolutionRate, seq(0, 1, 0.25), max(state_resolved$freq))
+
+ggplot(state_resolved, aes(x=state, y=freq)) +
+  geom_bar(stat="identity", fill='#00BFC4') +
   geom_text(aes(3.8, resolutionRate,label = 'Avg. resolution rate', vjust = -0.5)) +
   geom_hline(yintercept = resolutionRate, linetype="dashed") +
-  scale_y_continuous(labels = scales::percent, breaks = c(resolutionRate, seq(0, 1, 0.2))) +
+  scale_y_continuous(labels = scales::percent, breaks = breaks) +
   xlab('State') + 
   ylab('Resolution rate') +
-  ggtitle("Resolution rate of complaints per state")
+  ggtitle("2015 resolution rate per state")
 
 ```
 
-### Description One
+The state where the complaint was filed have a big impact on the chance to it be
+resolved. The difference between the best resolution rate (in PB) and the worst
+(in PR) is 33%.
 
-
-### Plot Two
+### Median interval to resolve an issue per state
 ```{r echo=FALSE, Plot_Two}
 
+state_resolved_elapsedays <- subset(state_resolved_elapsedays, (resolved == 'Y'))
+medianElapsedDaysResolved <- median(ds[resolved == 'Y', 'elapsedDays'])
+
+state_ordered <- reorder(state_resolved_elapsedays$state, state_resolved_elapsedays$median)
+state_resolved_elapsedays$state <- factor(state_resolved_elapsedays$state, levels(state_ordered))
+
+ggplot(state_resolved_elapsedays, aes(x=state, y=median)) +
+  geom_bar(stat="identity", fill = '#00BFC4') +
+  geom_text(aes(3.0, medianElapsedDaysResolved,label = 'Median interval', vjust = -0.5)) +
+  geom_hline(yintercept = medianElapsedDaysResolved, linetype="dashed") +
+  xlab('State') + 
+  ylab('Days') +
+  ggtitle("2015 median interval to resolve an issue per state") 
 ```
 
-### Description Two
 
 
 ### Plot Three
@@ -419,6 +468,11 @@ ggplot(state_resolved, aes(x=state, y=freq, fill=factor(resolved))) +
 ------
 
 # Reflection
+
+Ideas for the future. Use data from other years to analyse the trends in data.
+Come up with an indicator of the quality of the Procon considering the resolution
+rate and the time it takes to resolve the issue. Come up with an indicator for
+the companies.
 
 > **Tip**: Here's the final step! Reflect on the exploration you performed and
 the insights you found. What were some of the struggles that you went through?
