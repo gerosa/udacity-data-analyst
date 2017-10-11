@@ -19,6 +19,11 @@ Choose any area of the world in https://www.openstreetmap.org and use data mungi
 
 [Link to report](./P3/Project3.ipynb)
 
+### P4: Exploratory Data Analysis
+
+Use R and apply exploratory data analysis techniques to explore a selected data set for distributions, outliers, and relationships.
+[Link to report](./P4/projecttemplate.rmd)
+
 ### P5: Identify Fraud from Enron Email
 
 Play detective and put your machine learning skills to use by building an algorithm to identify Enron Employees who may have committed fraud based on the public Enron financial and email dataset.
