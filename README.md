@@ -22,6 +22,7 @@ Choose any area of the world in https://www.openstreetmap.org and use data mungi
 ### P4: Exploratory Data Analysis
 
 Use R and apply exploratory data analysis techniques to explore a selected data set for distributions, outliers, and relationships.
+
 [Link to report](./P4/projecttemplate.rmd)
 
 ### P5: Identify Fraud from Enron Email
