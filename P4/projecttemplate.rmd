@@ -418,17 +418,35 @@ than others.
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 
+medianElapsedDaysResolved <- median(ds[resolved == 'Y', 'elapsedDays'])
+
 # joining the frequency table of states/resolved with the median elapsed days
 state_resolved <- subset(state_resolved, (resolved == 'Y'))
 state_resolvedrate_elapsedays <- state_resolved_elapsedays %>%
   left_join(state_resolved)
 
 ggplot(state_resolvedrate_elapsedays, aes(x = freq, y = median, label = state)) +
-  geom_text(check_overlap = TRUE) 
+  geom_vline(xintercept = resolutionRate, linetype = "dashed") +
+  geom_hline(yintercept = medianElapsedDaysResolved, linetype = "dashed") +
+  geom_text(check_overlap = TRUE, colour = 'blue')
+  
 ```
 
 This plot compares the resolution rate and the median time to resolve an issue
-for each state.
+for each state. The horizontal dashed line represents the median interval 
+between all states and the vertical line represents the general resolution rate.
+The chart could be divided into four quadrants:
+
+| Quadrant     | Resolution Rate  | Median interval  |
+|--------------|------------------|------------------|
+| Bottom left  | Low              | Fast             | 
+| Bottom right | High             | Fast             |
+| Upper left   | Low              | Slow             |
+| Upper right  | High             | Slow             |
+
+The best quadrant is the bottom right and the worst is the upper left.
+
+
 
 # Multivariate Analysis
 
@@ -476,8 +494,6 @@ resolved. The difference between the best resolution rate (in PB) and the worst
 
 ### Median interval to resolve an issue per state
 ```{r echo=FALSE, Plot_Two}
-
-medianElapsedDaysResolved <- median(ds[resolved == 'Y', 'elapsedDays'])
 
 # sorting the states by the median elapsed days 
 state_ordered <- reorder(state_resolved_elapsedays$state, state_resolved_elapsedays$median)
