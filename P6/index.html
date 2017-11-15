@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script>
+    
+    <style>
+      h2 {
+        text-align: center;
+      }
+      svg {
+        margin: auto;
+        display: block;
+      }
+    </style>
+
+    <script type="text/javascript">
+        
+        "use strict";
+
+        function resolutionTime(data) {
+            // calculate the weighted mean of the resolution time
+            var total = d3.sum(data, function(d) { return d.n });
+            return d3.sum(data, function(d) { return d.n / total * d.median });
+        }
+
+        function resolutionRate(data) {
+
+            // calculate the weighted mean of the resolution rate
+            var total = d3.sum(data, function(d) { return d.n });
+            return d3.sum(data, function(d) { return d.n / total * d.freq });
+        }
+
+        function draw() {
+
+            var margin = 50,
+              width = 1024,
+              height = 600;
+            
+            d3.select("body")
+                .append("h2")
+                .text("2015 Consumer Business Complaints in Brazil per State");
+
+            var svg = dimple.newSvg("body", width, height);
+
+            d3.tsv("data/data.tsv", function (data) {
+
+
+                var rr = resolutionRate(data);
+                var rt = resolutionTime(data);
+
+                // fix data type
+                data.forEach(function(d)    {
+                    d.freq = parseFloat(d.freq);
+                });
+
+                var myChart = new dimple.chart(svg, data);
+                myChart.setMargins(margin, margin, margin, margin);
+                
+                var x = myChart.addMeasureAxis("x", "freq");
+                x.title = "Resolution rate";
+                x.tickFormat = '.1%';
+                x.overrideMin = 0.45;
+                x.overrideMax = 0.90;
+
+                var y = myChart.addMeasureAxis("y", "median");
+                y.title = "Median resolution time in weeks";
+                y.overrideMax = 45;
+
+                var z = myChart.addMeasureAxis("z", "n");
+
+                
+                var mySerie = myChart.addSeries("state", dimple.plot.bubble);
+
+                mySerie.afterDraw = function (shape, data) {
+
+                    var s = d3.select(shape);
+
+                    //set minimum radius for the bubbles to avoid the state
+                    // name to be bigger than the bubble
+                    s.attr("r", Math.max(parseFloat(s.attr("r")), 7.0));
+
+                    // adds the states labels
+                    svg.append("text")
+                      .attr("x", parseFloat(s.attr("cx")))
+                      .attr("y", parseFloat(s.attr("cy")) + 3)
+                      .style("font-family", "courier new")
+                      .style("text-anchor", "middle")
+                      .style("font-size", "12px")
+                      .style("fill", "black")
+                      .style("pointer-events", "none")
+                      .text(data.aggField);
+                };
+
+                myChart.draw();
+
+                // mean resolution rate line
+                svg.append("line")
+                    .attr("x1", x._scale(rr))
+                    .attr("y1", myChart._yPixels())
+                    .attr("x2", x._scale(rr))
+                    .attr("y2", myChart._yPixels() + myChart._heightPixels())
+                    .style("stroke", "red")
+                    .style("stroke-dasharray", "3");
+
+                // mean resolution time line
+                svg.append("line")
+                    .attr("x1", myChart._xPixels())
+                    .attr("y1", y._scale(rt))
+                    .attr("x2", myChart._xPixels() + myChart._widthPixels())
+                    .attr("y2", y._scale(rt))
+                    .style("stroke", "red")
+                    .style("stroke-dasharray", "3");
+                
+            });
+        }
+
+    </script>
+    
+  </head>
+<body>
+    <script type="text/javascript">
+        draw();
+    </script>
+</body>
+</html>
