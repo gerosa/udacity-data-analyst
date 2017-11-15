@@ -13,9 +13,6 @@
         margin: auto;
         display: block;
       }
-      text.quadrant-label {
-        font-size: "16px";
-      }
     </style>
 
     <script type="text/javascript">
@@ -33,21 +30,6 @@
             // calculate the weighted mean of the resolution rate
             var total = d3.sum(data, function(d) { return d.n });
             return d3.sum(data, function(d) { return d.n / total * d.freq });
-        }
-
-        function drawQuadrantLabels(svg, x, y, l1, l2) {
-            svg.append("text")
-                .attr("class", "quadrant-label")
-                .attr("x", x)
-                .attr("y", y)
-                .attr("dy", "0em")
-                .text(l1 + " resolution rate");
-            svg.append("text")
-                .attr("class", "quadrant-label")
-                .attr("x", x)
-                .attr("y", y)
-                .attr("dy", "1em")
-                .text(l2 + " resolution time");
         }
 
         function draw() {
@@ -84,7 +66,7 @@
 
                 var y = myChart.addMeasureAxis("y", "median");
                 y.title = "Median resolution time in weeks";
-                y.overrideMax = 50;
+                y.overrideMax = 45;
 
                 var z = myChart.addMeasureAxis("z", "n");
 
@@ -130,18 +112,6 @@
                     .attr("y2", y._scale(rt))
                     .style("stroke", "red")
                     .style("stroke-dasharray", "3");
-
-                // quadrants labels
-                var leftMargin = myChart._xPixels() + 10;
-                var topMargin = myChart._yPixels() + 25;
-                var bottonMargin = myChart._heightPixels() + 20;
-                var rightMargin = myChart._widthPixels() - 85;
-                
-                
-                drawQuadrantLabels(svg, rightMargin, topMargin, "High", "Slow");
-                drawQuadrantLabels(svg, rightMargin, bottonMargin, "High", "Fast");
-                drawQuadrantLabels(svg, leftMargin, bottonMargin, "Low", "Fast");
-                drawQuadrantLabels(svg, leftMargin, topMargin, "Low", "Slow");
                 
             });
         }
