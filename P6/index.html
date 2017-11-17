@@ -9,6 +9,9 @@
       h2 {
         text-align: center;
       }
+      h3 {
+        text-align: center;
+      }
       svg {
         margin: auto;
         display: block;
@@ -16,25 +19,39 @@
       text.quadrant-label {
         font-size: "16px";
       }
+      text.custom-tick {
+        font-family: "sans-serif";
+      }
     </style>
 
     <script type="text/javascript">
         
         "use strict";
 
+        var PCT_FORMAT = ".0%";
+
+        /**
+         * return the weighted mean of the resolution time
+         * @param {array} data - the data object
+         */
         function resolutionTime(data) {
-            // calculate the weighted mean of the resolution time
-            var total = d3.sum(data, function(d) { return d.n });
-            return d3.sum(data, function(d) { return d.n / total * d.median });
+            var total = d3.sum(data, function(d) { return d.n; });
+            return d3.sum(data, function(d) { return d.n / total * d.median; });
         }
 
+        /**
+         * return the weighted mean of the resolution rate
+         * @param {array} data - the data object
+         */
         function resolutionRate(data) {
-
-            // calculate the weighted mean of the resolution rate
-            var total = d3.sum(data, function(d) { return d.n });
-            return d3.sum(data, function(d) { return d.n / total * d.freq });
+            var total = d3.sum(data, function(d) { return d.n; });
+            return d3.sum(data, function(d) { return d.n / total * d.freq; });
         }
 
+        /**
+         * append text labels l1 and l2 in the position x, y
+         * @param {array} data - the data object
+         */
         function drawQuadrantLabels(svg, x, y, l1, l2) {
             svg.append("text")
                 .attr("class", "quadrant-label")
@@ -50,6 +67,37 @@
                 .text(l2 + " resolution time");
         }
 
+        /**
+         * add the vertical line
+         */
+        function addVerticalLine(svg, myChart, x, value, label) {
+            var xIntercept = x._scale(value); 
+            svg.append("line")
+                .attr("x1", xIntercept)
+                .attr("y1", myChart._yPixels())
+                .attr("x2", xIntercept)
+                .attr("y2", myChart._yPixels() + myChart._heightPixels())
+                .style("stroke", "red")
+                .style("stroke-dasharray", "3");
+            svg.append("text")
+                .attr("x", xIntercept)
+                .attr("y", myChart._yPixels() - 2)
+                .attr("class", "custom-tick")
+                .style("font-size", "10px")
+                .attr("text-anchor", "middle")
+                .text(label);
+            svg.append("text")
+                .attr("x", xIntercept)
+                .attr("y", myChart._yPixels() + myChart._heightPixels() + 15)
+                .attr("text-anchor", "middle")
+                .style("font-size", "10px")
+                .attr("class", "custom-tick")
+                .text(d3.format(PCT_FORMAT)(value));
+        }
+
+        /**
+         * main draw function
+         */
         function draw() {
 
             var margin = 50,
@@ -58,7 +106,11 @@
             
             d3.select("body")
                 .append("h2")
-                .text("2015 Consumer Business Complaints in Brazil per State");
+                .text("2015 Consumer Business Complaints in Brazil");
+
+            d3.select("body")
+                .append("h3")
+                .text("How often and how fast consumers have their issues resolved in different states");
 
             var svg = dimple.newSvg("body", width, height);
 
@@ -78,18 +130,30 @@
                 
                 var x = myChart.addMeasureAxis("x", "freq");
                 x.title = "Resolution rate";
-                x.tickFormat = '.1%';
+                x.ticks = 4;
+                x.tickFormat = PCT_FORMAT;
                 x.overrideMin = 0.45;
                 x.overrideMax = 0.90;
 
                 var y = myChart.addMeasureAxis("y", "median");
                 y.title = "Median resolution time in weeks";
+                y.ticks = 4;
                 y.overrideMax = 50;
 
                 var z = myChart.addMeasureAxis("z", "n");
 
                 
                 var mySerie = myChart.addSeries("state", dimple.plot.bubble);
+                myChart.defaultColors = [new dimple.color("#80B1D3", "#40647c", 0.8)];
+
+                mySerie.getTooltipText = function (e) {
+                    return [
+                            "State: " + e.aggField[0],
+                            "Resolution rate: " + d3.format(PCT_FORMAT)(e.cx),
+                            "Median resolution time: " + parseInt(e.cy) + " weeks",
+                            "# of complaints: " + d3.format(",.2r")(e.cz)
+                        ];
+                };
 
                 mySerie.afterDraw = function (shape, data) {
 
@@ -111,16 +175,11 @@
                       .text(data.aggField);
                 };
 
+                myChart.assignColor("state", "white", "red", 0.5);
                 myChart.draw();
 
                 // mean resolution rate line
-                svg.append("line")
-                    .attr("x1", x._scale(rr))
-                    .attr("y1", myChart._yPixels())
-                    .attr("x2", x._scale(rr))
-                    .attr("y2", myChart._yPixels() + myChart._heightPixels())
-                    .style("stroke", "red")
-                    .style("stroke-dasharray", "3");
+                addVerticalLine(svg, myChart, x, rr, "Mean resolution rate");
 
                 // mean resolution time line
                 svg.append("line")
@@ -136,7 +195,6 @@
                 var topMargin = myChart._yPixels() + 25;
                 var bottonMargin = myChart._heightPixels() + 20;
                 var rightMargin = myChart._widthPixels() - 85;
-                
                 
                 drawQuadrantLabels(svg, rightMargin, topMargin, "High", "Slow");
                 drawQuadrantLabels(svg, rightMargin, bottonMargin, "High", "Fast");
