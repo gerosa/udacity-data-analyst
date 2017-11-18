@@ -19,9 +19,6 @@
       text.quadrant-label {
         font-size: "16px";
       }
-      text.custom-tick {
-        font-family: "sans-serif";
-      }
     </style>
 
     <script type="text/javascript">
@@ -29,6 +26,10 @@
         "use strict";
 
         var PCT_FORMAT = ".0%";
+        var MIN_RADIUS = 7;
+        var CIRCLE_FILL_COLOR = "#80B1D3";
+        var CIRCLE_STROKE_COLOR = "#40647c";
+        var CIRCLE_OPACITY = 0.8;
 
         /**
          * return the weighted mean of the resolution time
@@ -49,21 +50,39 @@
         }
 
         /**
+         * return name of the state given the code
+         * @param {array} data - the data object
+         * @param {string} code - the state code
+         */
+        function findStateByCode(data, code) {
+            for (var i=0; i < data.length; i++) {
+                if (data[i].state == code) {
+                    return data[i].stateName;
+                }
+            }
+            return null;
+        }
+
+        /**
          * append text labels l1 and l2 in the position x, y
          * @param {array} data - the data object
          */
-        function drawQuadrantLabels(svg, x, y, l1, l2) {
+        function drawQuadrantLabels(svg, x, y, l1, l2, anchorH, anchorV) {
             svg.append("text")
                 .attr("class", "quadrant-label")
                 .attr("x", x)
                 .attr("y", y)
                 .attr("dy", "0em")
+                .attr("text-anchor", anchorH)
+                .attr("alignment-baseline", anchorV)
                 .text(l1 + " resolution rate");
             svg.append("text")
                 .attr("class", "quadrant-label")
                 .attr("x", x)
                 .attr("y", y)
                 .attr("dy", "1em")
+                .attr("text-anchor", anchorH)
+                .attr("alignment-baseline", anchorV)
                 .text(l2 + " resolution time");
         }
 
@@ -82,17 +101,39 @@
             svg.append("text")
                 .attr("x", xIntercept)
                 .attr("y", myChart._yPixels() - 2)
-                .attr("class", "custom-tick")
-                .style("font-size", "10px")
                 .attr("text-anchor", "middle")
                 .text(label);
             svg.append("text")
                 .attr("x", xIntercept)
                 .attr("y", myChart._yPixels() + myChart._heightPixels() + 15)
                 .attr("text-anchor", "middle")
-                .style("font-size", "10px")
-                .attr("class", "custom-tick")
                 .text(d3.format(PCT_FORMAT)(value));
+        }
+
+        /**
+         * add the horizontal line
+         */
+        function addHorizontalLine(svg, myChart, y, value, label) {
+            var yIntercept = y._scale(value); 
+            
+            svg.append("line")
+                .attr("x1", myChart._xPixels())
+                .attr("y1", yIntercept)
+                .attr("x2", myChart._xPixels() + myChart._widthPixels())
+                .attr("y2", yIntercept)
+                .style("stroke", "red")
+                .style("stroke-dasharray", "3");
+            svg.append("text")
+                .attr("x", myChart._xPixels() + myChart._widthPixels())
+                .attr("y", yIntercept - 4)
+                .attr("text-anchor", "end")
+                .text(label);
+            svg.append("text")
+                .attr("x", myChart._xPixels() - 5)
+                .attr("y", yIntercept)
+                .attr("text-anchor", "end")
+                .attr("alignment-baseline", "middle")
+                .text(parseInt(value));
         }
 
         /**
@@ -144,11 +185,11 @@
 
                 
                 var mySerie = myChart.addSeries("state", dimple.plot.bubble);
-                myChart.defaultColors = [new dimple.color("#80B1D3", "#40647c", 0.8)];
+                myChart.defaultColors = [new dimple.color(CIRCLE_FILL_COLOR, CIRCLE_STROKE_COLOR, CIRCLE_OPACITY)];
 
                 mySerie.getTooltipText = function (e) {
                     return [
-                            "State: " + e.aggField[0],
+                            "State: " + findStateByCode(data, e.aggField[0]),
                             "Resolution rate: " + d3.format(PCT_FORMAT)(e.cx),
                             "Median resolution time: " + parseInt(e.cy) + " weeks",
                             "# of complaints: " + d3.format(",.2r")(e.cz)
@@ -161,16 +202,16 @@
 
                     //set minimum radius for the bubbles to avoid the state
                     // name to be bigger than the bubble
-                    s.attr("r", Math.max(parseFloat(s.attr("r")), 7.0));
+                    s.attr("r", Math.max(parseFloat(s.attr("r")), MIN_RADIUS));
 
                     // adds the states labels
                     svg.append("text")
                       .attr("x", parseFloat(s.attr("cx")))
-                      .attr("y", parseFloat(s.attr("cy")) + 3)
-                      .style("font-family", "courier new")
+                      .attr("y", parseFloat(s.attr("cy")))
+                      .style("font-family", "sans-serif")
+                      .style("font-size", "10px")
                       .style("text-anchor", "middle")
-                      .style("font-size", "12px")
-                      .style("fill", "black")
+                      .style("alignment-baseline", "middle")
                       .style("pointer-events", "none")
                       .text(data.aggField);
                 };
@@ -182,24 +223,34 @@
                 addVerticalLine(svg, myChart, x, rr, "Mean resolution rate");
 
                 // mean resolution time line
-                svg.append("line")
-                    .attr("x1", myChart._xPixels())
-                    .attr("y1", y._scale(rt))
-                    .attr("x2", myChart._xPixels() + myChart._widthPixels())
-                    .attr("y2", y._scale(rt))
-                    .style("stroke", "red")
-                    .style("stroke-dasharray", "3");
+                addHorizontalLine(svg, myChart, y, rt, "Mean resolution time");
 
                 // quadrants labels
-                var leftMargin = myChart._xPixels() + 10;
-                var topMargin = myChart._yPixels() + 25;
-                var bottonMargin = myChart._heightPixels() + 20;
-                var rightMargin = myChart._widthPixels() - 85;
+                var leftMargin = myChart._xPixels();
+                var topMargin = myChart._yPixels();
+                var bottonMargin = myChart._yPixels() + myChart._heightPixels();
+                var rightMargin = myChart._xPixels() + myChart._widthPixels();
+                var labelMargin = 10;
                 
-                drawQuadrantLabels(svg, rightMargin, topMargin, "High", "Slow");
-                drawQuadrantLabels(svg, rightMargin, bottonMargin, "High", "Fast");
-                drawQuadrantLabels(svg, leftMargin, bottonMargin, "Low", "Fast");
-                drawQuadrantLabels(svg, leftMargin, topMargin, "Low", "Slow");
+                drawQuadrantLabels(svg, rightMargin - labelMargin, topMargin + labelMargin, "High", "Slow", "end", "hanging");
+                drawQuadrantLabels(svg, rightMargin - labelMargin, bottonMargin - 25, "High", "Fast", "end", "baseline");
+                drawQuadrantLabels(svg, leftMargin + labelMargin, bottonMargin - 25, "Low", "Fast", "start", "baseline");
+                drawQuadrantLabels(svg, leftMargin + labelMargin, topMargin + labelMargin, "Low", "Slow", "start", "hanging");
+
+                svg.append("circle")
+                    .attr("cx", leftMargin)
+                    .attr("cy", bottonMargin + 30)
+                    .attr("r", 10)
+                    .attr("oppacity", CIRCLE_OPACITY)
+                    .attr("fill", CIRCLE_FILL_COLOR)
+                    .attr("stroke", CIRCLE_STROKE_COLOR);
+                svg.append("text")
+                    .attr("x", leftMargin + 15)
+                    .attr("y", bottonMargin + 30)
+                    .attr("alignment-baseline", "middle")
+                    .style("font-family", "sans-serif")
+                    .style("font-size", "10px")
+                    .text("The larger the circle, the more complaints in the state");
                 
             });
         }

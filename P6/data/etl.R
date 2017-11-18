@@ -25,6 +25,36 @@ ds$registerDate <- as.Date(ds$registerDate)
 ds$state <- as.factor(ds$state)
 ds$resolved <- as.factor(ds$resolved)
 
+
+ds$stateName <- recode(ds$state,
+                       `AC` = 'Acre',
+                       `AL` = 'Alagoas',
+                       `AP` = 'Amapá',
+                       `AM` = 'Amazonas',
+                       `BA` = 'Bahia',
+                       `CE` = 'Ceará',
+                       `DF` = 'Distrito Federal',
+                       `ES` = 'Espírito Santo',
+                       `GO` = 'Goiás',
+                       `MA` = 'Maranhão',
+                       `MT` = 'Mato Grosso',
+                       `MS` = 'Mato Grosso do Sul',
+                       `MG` = 'Minas Gerais',
+                       `PA` = 'Pará',
+                       `PB` = 'Paraíba',
+                       `PR` = 'Paraná',
+                       `PE` = 'Pernambuco',
+                       `PI` = 'Piauí',
+                       `RJ` = 'Rio de Janeiro',
+                       `RN` = 'Rio Grande do Norte',
+                       `RS` = 'Rio Grande do Sul',
+                       `RO` = 'Rondônia',
+                       `RR` = 'Roraima',
+                       `SC` = 'Santa Catarina',
+                       `SP` = 'São Paulo',
+                       `SE` = 'Sergipe',
+                       `TO` = 'Tocantins')
+
 # translating S (sim) to Y (yes)
 ds$resolved <- recode(ds$resolved, S = 'Y', N = 'N')
 
@@ -33,14 +63,14 @@ ds$elapsedDays <- as.numeric(ds$closingDate - ds$registerDate)
 
 # calculate the frequency table for the state / resolved features
 state_resolved <- ds %>%
-  group_by(state, resolved) %>%
+  group_by(state, stateName, resolved) %>%
   summarise (n = n()) %>%
   mutate(freq = n / sum(n)) %>%
   subset(resolved == 'Y')
 
 # calculate the median and mean elapsed days per state and resolved features
 state_resolved_elapsedays <- ds %>%
-  group_by(state, resolved) %>%
+  group_by(state, stateName, resolved) %>%
   summarise(median = median(elapsedDays), mean = mean(elapsedDays)) %>%
   subset(resolved == 'Y')
 

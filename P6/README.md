@@ -28,7 +28,7 @@ Changes: I added labels in the four quadrants (slow/fast or low/high).
 ## Feedback 2
  > I did not understand what the area of the circles means. Is it the total amount of complaints? And I did not understand the dashed lines of red. I think it's the average or median of all states, but I was in doubt. One last thing: have you tried to leave all circles of one color alone? Maybe it does not need color. It was just these comments. I found the animation great.
 
-Changes: I made all bubbles with the same color. 
+Changes: I added legend explaning that the size of the circle represents is proportional with the number of complaints in the state. I added the labels and the values in the red lines. I made all bubbles with the same color.
 
 ### Resources
 
