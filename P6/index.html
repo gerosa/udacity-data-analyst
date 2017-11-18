@@ -237,6 +237,7 @@
                 drawQuadrantLabels(svg, leftMargin + labelMargin, bottonMargin - 25, "Low", "Fast", "start", "baseline");
                 drawQuadrantLabels(svg, leftMargin + labelMargin, topMargin + labelMargin, "Low", "Slow", "start", "hanging");
 
+                // circle size legend
                 svg.append("circle")
                     .attr("cx", leftMargin)
                     .attr("cy", bottonMargin + 30)
@@ -246,11 +247,21 @@
                     .attr("stroke", CIRCLE_STROKE_COLOR);
                 svg.append("text")
                     .attr("x", leftMargin + 15)
-                    .attr("y", bottonMargin + 30)
+                    .attr("y", bottonMargin + 27)
                     .attr("alignment-baseline", "middle")
                     .style("font-family", "sans-serif")
                     .style("font-size", "10px")
                     .text("The larger the circle, the more complaints in the state");
+
+
+                // source
+                svg.append("text")
+                    .attr("x", rightMargin)
+                    .attr("y", bottonMargin + 27)
+                    .attr("text-anchor", "end")
+                    .style("font-family", "sans-serif")
+                    .style("font-size", "10px")
+                    .html("Source: <a href='http://dados.gov.br/dataset/cadastro-nacional-de-reclamacoes-fundamentadas-procons-sindec1'>data.gov.br</a>");                
                 
             });
         }

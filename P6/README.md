@@ -30,6 +30,11 @@ Changes: I added labels in the four quadrants (slow/fast or low/high).
 
 Changes: I added legend explaning that the size of the circle represents is proportional with the number of complaints in the state. I added the labels and the values in the red lines. I made all bubbles with the same color.
 
+## Feedback 3
+The reader missed the source of the data in the chart.
+
+Changes: the sources was included.
+
 ### Resources
 
 - [dados.gov.br](http://dados.gov.br/dataset/cadastro-nacional-de-reclamacoes-fundamentadas-procons-sindec1)
