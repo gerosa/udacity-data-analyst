@@ -4,20 +4,14 @@
     <meta charset="utf-8">
     <script src="http://d3js.org/d3.v4.min.js"></script>
     <script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script>
-    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <style>
-      h2 {
-        text-align: center;
-      }
-      h3 {
+      h1 {
         text-align: center;
       }
       svg {
         margin: auto;
         display: block;
-      }
-      text.quadrant-label {
-        font-size: "16px";
       }
     </style>
 
@@ -141,19 +135,14 @@
          */
         function draw() {
 
-            var margin = 50,
+            var left = 40,
+              top = 40,
+              right = 100,
+              botton = 100,
               width = 1024,
               height = 600;
-            
-            d3.select("body")
-                .append("h2")
-                .text("2015 Consumer Business Complaints in Brazil");
 
-            d3.select("body")
-                .append("h3")
-                .text("How often and how fast consumers have their issues resolved in different states");
-
-            var svg = dimple.newSvg("body", width, height);
+            var svg = dimple.newSvg("#myChart", width, height);
 
             d3.tsv("data/data.tsv", function (data) {
 
@@ -167,7 +156,7 @@
                 });
 
                 var myChart = new dimple.chart(svg, data);
-                myChart.setMargins(margin, margin, margin, margin);
+                myChart.setMargins(left, top, right, botton);
                 
                 var x = myChart.addMeasureAxis("x", "freq");
                 x.title = "Resolution rate";
@@ -175,17 +164,18 @@
                 x.tickFormat = PCT_FORMAT;
                 x.overrideMin = 0.45;
                 x.overrideMax = 0.90;
+                //x.showGridlines = false;
 
                 var y = myChart.addMeasureAxis("y", "median");
                 y.title = "Median resolution time in weeks";
                 y.ticks = 4;
                 y.overrideMax = 50;
+                //y.showGridlines = false;
 
                 var z = myChart.addMeasureAxis("z", "n");
-
                 
-                var mySerie = myChart.addSeries("state", dimple.plot.bubble);
-                myChart.defaultColors = [new dimple.color(CIRCLE_FILL_COLOR, CIRCLE_STROKE_COLOR, CIRCLE_OPACITY)];
+                // The last element in the array is used for colouring
+                var mySerie = myChart.addSeries(["state", "region"], dimple.plot.bubble);
 
                 mySerie.getTooltipText = function (e) {
                     return [
@@ -195,6 +185,8 @@
                             "# of complaints: " + d3.format(",.2r")(e.cz)
                         ];
                 };
+
+                myChart.addLegend(width - right, top, 100, 100, "right");
 
                 mySerie.afterDraw = function (shape, data) {
 
@@ -213,10 +205,11 @@
                       .style("text-anchor", "middle")
                       .style("alignment-baseline", "middle")
                       .style("pointer-events", "none")
-                      .text(data.aggField);
+                      .text(data.aggField[0]);
                 };
 
-                myChart.assignColor("state", "white", "red", 0.5);
+                
+
                 myChart.draw();
 
                 // mean resolution rate line
@@ -243,8 +236,8 @@
                     .attr("cy", bottonMargin + 30)
                     .attr("r", 10)
                     .attr("oppacity", CIRCLE_OPACITY)
-                    .attr("fill", CIRCLE_FILL_COLOR)
-                    .attr("stroke", CIRCLE_STROKE_COLOR);
+                    .attr("fill", "white")
+                    .attr("stroke", "black");
                 svg.append("text")
                     .attr("x", leftMargin + 15)
                     .attr("y", bottonMargin + 27)
@@ -270,6 +263,19 @@
     
   </head>
 <body>
+
+    <div class="container">
+        <h1>2015 Consumer Business Complaints in Brazil</h1>
+
+        <p>When Brazilian consumers need to resolve a dispute with business the first step is to go to a local Procon (Consumer Protection Agency) and file a complaint. The Procon assists the consumer and intermediates the resolution with the company. The chart below shows how often and how fast consumers have their issues resolved in different states:</p>
+        
+        <div id="myChart"></div>
+        
+        <p>Depending on the state where the complaint was filled, the consumer could have a much better chance to resolve his issue. For example, in Parana (PR) the resolution rate is only 50% while in Paraiba (PB) consumers resolve more than 80% of their issues. Also, the state could determine how much time the consumer will have to wait. For example, in the Rio de Janeiro (RJ) the median time to resolve an issue is only 3 weeks while in Distrito Federal (DF) is more than one year.</p>
+
+        <p>Another interesting observation is that almost all states from the region "Nordeste" are located in the best quadrant (high resolution rate and fast resolution time).</p>
+    </div>
+
     <script type="text/javascript">
         draw();
     </script>

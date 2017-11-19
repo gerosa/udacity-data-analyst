@@ -7,7 +7,7 @@ When Brazilian consumers need to resolve a dispute with business the first step 
 Depending on the state where the complaint was filled, the consumer could have a much better chance to resolve his issue. For example, in Parana (PR) the resolution rate is only 50% while in Paraiba consumers resolve more than 80% of their issues. Also, the state could determine how much time the consumer will have to wait. For example, in the Rio de Janeiro (RJ) the median time to resolve an issue is only 3 weeks while in Distrito Federal (DF) is more than one year.
 
 ### Design
-A scatter plot was chosen as the final chart type because it allows the comparasion between the resolution rate and the median time to resolve issues for each state. The size of the bubble represents the number of complaints filed in each state. The vertical line represents the weighted mean resolution rate and the horizontal line represents the weighted mean resolution time. 
+A scatter plot was chosen as the final chart type because it allows the comparasion between the resolution rate and the median time to resolve issues for each state. The size of the bubble represents the number of complaints filed in each state. The vertical line represents the weighted mean resolution rate and the horizontal line represents the weighted mean resolution time. The color of the bubbles represents the region where the state is located.
 
 The chart could be divided into four quadrants:
 

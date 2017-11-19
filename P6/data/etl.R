@@ -6,11 +6,11 @@ ds = read.csv("reclamacoes-fundamentadas-sindec-2015.csv",
               sep=',', encoding='utf-8', stringsAsFactors = FALSE, strip.white = TRUE)
 
 # keeping only columns used in this analysis
-ds <- subset(ds, select=c(AnoCalendario, DataArquivamento, DataAbertura, UF,
+ds <- subset(ds, select=c(AnoCalendario, DataArquivamento, DataAbertura, Regiao, UF,
                           Atendida))
 
 # renaming columns
-names(ds) <- c('year', 'closingDate', 'registerDate', 'state', 'resolved')
+names(ds) <- c('year', 'closingDate', 'registerDate', 'region', 'state', 'resolved')
 
 # replacing empty cells with NA
 ds[ds == ''] <- NA
@@ -63,14 +63,14 @@ ds$elapsedDays <- as.numeric(ds$closingDate - ds$registerDate)
 
 # calculate the frequency table for the state / resolved features
 state_resolved <- ds %>%
-  group_by(state, stateName, resolved) %>%
+  group_by(state, stateName, region, resolved) %>%
   summarise (n = n()) %>%
   mutate(freq = n / sum(n)) %>%
   subset(resolved == 'Y')
 
 # calculate the median and mean elapsed days per state and resolved features
 state_resolved_elapsedays <- ds %>%
-  group_by(state, stateName, resolved) %>%
+  group_by(state, stateName, region, resolved) %>%
   summarise(median = median(elapsedDays), mean = mean(elapsedDays)) %>%
   subset(resolved == 'Y')
 
