@@ -26,8 +26,9 @@
         var CIRCLE_OPACITY = 0.8;
 
         /**
-         * return the weighted mean of the resolution time
+         * return the weighted mean (by the number of complaints) of the resolution time
          * @param {array} data - the data object
+         * @return {number} the weighted mean resolution time
          */
         function resolutionTime(data) {
             var total = d3.sum(data, function(d) { return d.n; });
@@ -35,8 +36,9 @@
         }
 
         /**
-         * return the weighted mean of the resolution rate
+         * return the weighted mean (by the number of complaints) of the resolution rate
          * @param {array} data - the data object
+         * @return {number} the weighted mean resolution rate
          */
         function resolutionRate(data) {
             var total = d3.sum(data, function(d) { return d.n; });
@@ -44,9 +46,10 @@
         }
 
         /**
-         * return name of the state given the code
+         * return name of the state given the its code
          * @param {array} data - the data object
          * @param {string} code - the state code
+         * @return {string} the name of the state. null if no state was found.
          */
         function findStateByCode(data, code) {
             for (var i=0; i < data.length; i++) {
@@ -59,29 +62,40 @@
 
         /**
          * append text labels l1 and l2 in the position x, y
-         * @param {array} data - the data object
+         * @param {object} svg - the svg object
+         * @param {number} x - x location
+         * @param {number} y - y location
+         * @param {string} l1 - first line label
+         * @param {string} l2 - second line label
+         * @param {string} textAnchor - text anchor to be applied
+         * @param {string} alignmentBaseline - alignment baseline
          */
-        function drawQuadrantLabels(svg, x, y, l1, l2, anchorH, anchorV) {
+        function drawQuadrantLabels(svg, x, y, l1, l2, textAnchor, alignmentBaseline) {
             svg.append("text")
                 .attr("class", "quadrant-label")
                 .attr("x", x)
                 .attr("y", y)
                 .attr("dy", "0em")
-                .attr("text-anchor", anchorH)
-                .attr("alignment-baseline", anchorV)
+                .attr("text-anchor", textAnchor)
+                .attr("alignment-baseline", alignmentBaseline)
                 .text(l1 + " resolution rate");
             svg.append("text")
                 .attr("class", "quadrant-label")
                 .attr("x", x)
                 .attr("y", y)
                 .attr("dy", "1em")
-                .attr("text-anchor", anchorH)
-                .attr("alignment-baseline", anchorV)
+                .attr("text-anchor", textAnchor)
+                .attr("alignment-baseline", alignmentBaseline)
                 .text(l2 + " resolution time");
         }
 
         /**
          * add the vertical line
+         * @param {object} svg - the svg object
+         * @param {object} myChar - the chart object
+         * @param {object} x - the x axis
+         * @param {number} value - the value of x axis to intercept the line
+         * @param {number} label - the label of the line
          */
         function addVerticalLine(svg, myChart, x, value, label) {
             var xIntercept = x._scale(value); 
@@ -106,6 +120,11 @@
 
         /**
          * add the horizontal line
+         * @param {object} svg - the svg object
+         * @param {object} myChar - the chart object
+         * @param {object} y - the y axis
+         * @param {number} value - the value of y axis to intercept the line
+         * @param {number} label - the label of the line
          */
         function addHorizontalLine(svg, myChart, y, value, label) {
             var yIntercept = y._scale(value); 
@@ -135,17 +154,16 @@
          */
         function draw() {
 
-            var left = 40,
-              top = 40,
+            var left = 50,
+              top = 50,
               right = 100,
-              botton = 100,
-              width = 1024,
+              botton = 50,
+              width = 888,
               height = 600;
 
             var svg = dimple.newSvg("#myChart", width, height);
 
             d3.tsv("data/data.tsv", function (data) {
-
 
                 var rr = resolutionRate(data);
                 var rt = resolutionTime(data);
@@ -164,13 +182,11 @@
                 x.tickFormat = PCT_FORMAT;
                 x.overrideMin = 0.45;
                 x.overrideMax = 0.90;
-                //x.showGridlines = false;
 
                 var y = myChart.addMeasureAxis("y", "median");
                 y.title = "Median resolution time in weeks";
                 y.ticks = 4;
                 y.overrideMax = 50;
-                //y.showGridlines = false;
 
                 var z = myChart.addMeasureAxis("z", "n");
                 
@@ -208,8 +224,6 @@
                       .text(data.aggField[0]);
                 };
 
-                
-
                 myChart.draw();
 
                 // mean resolution rate line
@@ -225,10 +239,18 @@
                 var rightMargin = myChart._xPixels() + myChart._widthPixels();
                 var labelMargin = 10;
                 
-                drawQuadrantLabels(svg, rightMargin - labelMargin, topMargin + labelMargin, "High", "Slow", "end", "hanging");
-                drawQuadrantLabels(svg, rightMargin - labelMargin, bottonMargin - 25, "High", "Fast", "end", "baseline");
-                drawQuadrantLabels(svg, leftMargin + labelMargin, bottonMargin - 25, "Low", "Fast", "start", "baseline");
-                drawQuadrantLabels(svg, leftMargin + labelMargin, topMargin + labelMargin, "Low", "Slow", "start", "hanging");
+                drawQuadrantLabels(svg,
+                    rightMargin - labelMargin, topMargin + labelMargin,
+                     "High", "Slow", "end", "hanging");
+                drawQuadrantLabels(svg,
+                    rightMargin - labelMargin, bottonMargin - 25,
+                      "High", "Fast", "end", "baseline");
+                drawQuadrantLabels(svg,
+                    leftMargin + labelMargin, bottonMargin - 25,
+                    "Low", "Fast", "start", "baseline");
+                drawQuadrantLabels(svg,
+                    leftMargin + labelMargin, topMargin + labelMargin, 
+                    "Low", "Slow", "start", "hanging");
 
                 // circle size legend
                 svg.append("circle")
@@ -267,13 +289,26 @@
     <div class="container">
         <h1>2015 Consumer Business Complaints in Brazil</h1>
 
-        <p>When Brazilian consumers need to resolve a dispute with business the first step is to go to a local Procon (Consumer Protection Agency) and file a complaint. The Procon assists the consumer and intermediates the resolution with the company. The chart below shows how often and how fast consumers have their issues resolved in different states:</p>
+        <p>When Brazilian consumers need to resolve a dispute with business the 
+           first step is to go to a local Procon (Consumer Protection Agency) and
+            file a complaint. The Procon assists the consumer and intermediates 
+            the resolution with the company. The chart below shows how often and
+             how fast consumers have their issues resolved in different states:</p>
         
         <div id="myChart"></div>
         
-        <p>Depending on the state where the complaint was filled, the consumer could have a much better chance to resolve his issue. For example, in Parana (PR) the resolution rate is only 50% while in Paraiba (PB) consumers resolve more than 80% of their issues. Also, the state could determine how much time the consumer will have to wait. For example, in the Rio de Janeiro (RJ) the median time to resolve an issue is only 3 weeks while in Distrito Federal (DF) is more than one year.</p>
+        <p>Depending on the state where the complaint was filled, the consumer 
+            could have a much better chance to resolve his issue. For example, 
+            in Parana (PR) the resolution rate is only 50% while in Paraiba (PB)
+             consumers resolve more than 80% of their issues. Also, the state 
+             could determine how much time the consumer will have to wait. 
+             For example, in the Rio de Janeiro (RJ) the median time to resolve 
+             an issue is only 2 weeks while in Distrito Federal (DF) is more 
+             than one year.</p>
 
-        <p>Another interesting observation is that almost all states from the region "Nordeste" are located in the best quadrant (high resolution rate and fast resolution time).</p>
+        <p>Another interesting observation is that almost all states from the 
+            region "Nordeste" are located in the best quadrant (high resolution
+             rate and fast resolution time).</p>
     </div>
 
     <script type="text/javascript">

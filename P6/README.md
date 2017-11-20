@@ -1,13 +1,14 @@
 ## P6: Make Effective Data Visualization
-*Create a data visualization from a data set that tells a story or highlights trends or patterns in the data. Use either dimple.js or d3.js to create the visualization. Your work should be a reflection of the theory and practice of data visualization, such as visual encodings, design principles, and effective communication.*
 
 ### Summary
-When Brazilian consumers need to resolve a dispute with business the first step is to go to a local Procon (Consumer Protection Agency) and file a complaint. The Procon assists the consumer and intermediates the resolution with the company. 
+When Brazilian consumers need to resolve a dispute with business the first step is to go to a local Procon (Consumer Protection Agency) and file a complaint. The Procon assists the consumer and intermediates the resolution with the company.
 
 Depending on the state where the complaint was filled, the consumer could have a much better chance to resolve his issue. For example, in Parana (PR) the resolution rate is only 50% while in Paraiba consumers resolve more than 80% of their issues. Also, the state could determine how much time the consumer will have to wait. For example, in the Rio de Janeiro (RJ) the median time to resolve an issue is only 3 weeks while in Distrito Federal (DF) is more than one year.
 
+![Static Chart](https://raw.githubusercontent.com/gerosa/udacity-data-analyst/master/P6/static_chart.png)
+
 ### Design
-A scatter plot was chosen as the final chart type because it allows the comparasion between the resolution rate and the median time to resolve issues for each state. The size of the bubble represents the number of complaints filed in each state. The vertical line represents the weighted mean resolution rate and the horizontal line represents the weighted mean resolution time. The color of the bubbles represents the region where the state is located.
+A [bubble chart](https://datavizcatalogue.com/methods/bubble_chart.html) was chosen as the final chart type because it allows the comparasion between the resolution rate and the median time to resolve issues for each state. The size of the bubble represents the number of complaints filed in each state. The vertical line represents the weighted mean resolution rate and the horizontal line represents the weighted mean resolution time. The color of the bubbles represents the region where the state is located.
 
 The chart could be divided into four quadrants:
 

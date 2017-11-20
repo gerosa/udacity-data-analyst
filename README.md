@@ -30,3 +30,9 @@ Use R and apply exploratory data analysis techniques to explore a selected data 
 Play detective and put your machine learning skills to use by building an algorithm to identify Enron Employees who may have committed fraud based on the public Enron financial and email dataset.
 
 [Link to report](./P5/final_report.ipynb)
+
+### P6: Make Effective Data Visualization
+
+Create a data visualization from a data set that tells a story or highlights trends or patterns in the data. Use either dimple.js or d3.js to create the visualization. Your work should be a reflection of the theory and practice of data visualization, such as visual encodings, design principles, and effective communication.
+
+[Link to report](./P6/)
