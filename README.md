@@ -23,7 +23,9 @@ Choose any area of the world in https://www.openstreetmap.org and use data mungi
 
 Use R and apply exploratory data analysis techniques to explore a selected data set for distributions, outliers, and relationships.
 
-[Link to report](./P4/projecttemplate.rmd)
+[Link to report](https://www.kaggle.com/gerosa/relative-age-effect-in-the-american-baseball)
+
+[Link to source](./P4/projecttemplate.rmd)
 
 ### P5: Identify Fraud from Enron Email
 
@@ -35,7 +37,8 @@ Play detective and put your machine learning skills to use by building an algori
 
 Create a data visualization from a data set that tells a story or highlights trends or patterns in the data. Use either dimple.js or d3.js to create the visualization. Your work should be a reflection of the theory and practice of data visualization, such as visual encodings, design principles, and effective communication.
 
-[Link to report](./P6/)
+[Link to report](http://bl.ocks.org/gerosa/raw/0c45d41cccf5737f29d31821e13cfbce/)
 
+[Link to source](./P6/)
 
 ![Certificate](https://raw.githubusercontent.com/gerosa/udacity-data-analyst/master/certificate.png)
