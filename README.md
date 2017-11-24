@@ -23,7 +23,7 @@ Used Python and MongoDB to wrangle a dataset extracted from https://www.openstre
 
 Investigated the consumers business complaints in Brazil using R and exploratory data analysis (EDA) techniques, exploring both single variables and relationships between variables.
 
-[Link to report](https://www.kaggle.com/gerosa/brazilian-consumer-2015-complaints-eda)
+[Link to report (kaggle.com)](https://www.kaggle.com/gerosa/brazilian-consumer-2015-complaints-eda)
 
 ### [P5:](./P5/) Identify Fraud from Enron Email
 
