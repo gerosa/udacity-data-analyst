@@ -11,7 +11,7 @@ Analyzed the Stroop effect using descriptive statistics to provide an intuition 
 
 Used NumPy and Pandas to analyze the [Relative Age Effect](https://en.wikipedia.org/wiki/Relative_age_effect) in the american baseball.
 
-[Link to report](./P2/Project2.ipynb)
+[Link to report (kaggle.com)](https://www.kaggle.com/gerosa/relative-age-effect-in-the-american-baseball)
 
 ### [P3:](./P3/) Wrangle OpenStreetMap Data
 
@@ -23,7 +23,7 @@ Used Python and MongoDB to wrangle a dataset extracted from https://www.openstre
 
 Investigated the consumers business complaints in Brazil using R and exploratory data analysis (EDA) techniques, exploring both single variables and relationships between variables.
 
-[Link to report (kaggle.com)](https://www.kaggle.com/gerosa/relative-age-effect-in-the-american-baseball)
+[Link to report](https://www.kaggle.com/gerosa/brazilian-consumer-2015-complaints-eda)
 
 ### [P5:](./P5/) Identify Fraud from Enron Email
 
