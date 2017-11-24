@@ -21,7 +21,7 @@ Used Python and MongoDB to wrangle a dataset extracted from https://www.openstre
 
 ### [P4:](./P4/) Exploratory Data Analysis
 
-Investigated the consumers business complaints in Brazil using R and exploratory data analysis (EDA) techniques, exploring both single variables and relationships between variables.
+Used R and exploratory data analysis (EDA) techniques to investigated the consumers business complaints in Brazil, exploring both single variables and relationships between variables.
 
 [Link to report (kaggle.com)](https://www.kaggle.com/gerosa/brazilian-consumer-2015-complaints-eda)
 
